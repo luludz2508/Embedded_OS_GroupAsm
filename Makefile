@@ -24,8 +24,8 @@ kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
 	aarch64-none-elf-objcopy -O binary $(BUILD_DIR)/kernel8.elf kernel8.img
 
 clean:
-#	delete.bat
-	del .\objects\kernel8.elf .\objects\*.o
+	delete.bat
+#	del .\objects\kernel8.elf .\objects\*.o
 
 run:
 	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
