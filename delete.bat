@@ -1,0 +1,1 @@
+del .\objects\*.elf .\objects\*.o *.img
