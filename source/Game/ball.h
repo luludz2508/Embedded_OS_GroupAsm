@@ -8,4 +8,4 @@
 //void drawBall(struct Ball* self);
 
 
-const float PI=3.14159;
+const double PI=3.14159;

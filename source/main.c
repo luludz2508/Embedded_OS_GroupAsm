@@ -9,7 +9,7 @@
 
 void main() {
 
-	gameRun();
+//	gameRun();
 
 
 }

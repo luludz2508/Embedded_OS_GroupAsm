@@ -5,10 +5,15 @@
 void wait_msec(unsigned int n);
 void gameRun(){
 
-	int timeCount=0;
-	framebf_init(physicalWidth,physicalHeight, virtualWidth, virtualHeight);
-	setBGcolor(physicalWidth,physicalHeight, 0x00ffffff); // set BG to white
-	struct Ball newBall ={50,50,25,50,49,0.5,60};
+	int timeCount = 0;
+	int physicalWidth = 800;
+	int physicalHeight = 600;
+	int virtualWidth = 800;
+	int virtualHeight = 600;
+
+	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
+	setBGcolor(physicalWidth, physicalHeight, 0x00ffffff); // set BG to white
+	struct Ball newBall = {50, 50, 25, 50, 49, 0.5, 60};
 
 	drawBall(&newBall);
 	while(1){
