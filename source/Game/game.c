@@ -1,8 +1,10 @@
 //#include "stdio.h"
 #include "ball.h"
 #include "../framebf.h"
-	struct Ball newBall = {50, 50, 13, 25, 25, 10, 10};
-	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
+#include "block.h"
+
+	struct Ball newBall = {50, 50, 13, 25, 25, 2, 20};
+//	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
 {
@@ -19,22 +21,38 @@ void wait_msec(unsigned int n)
 
 }
 
-void gameRun(){
+void game_run() {
 	int physicalWidth = 800;
 	int physicalHeight = 600;
 	int virtualWidth = 800;
 	int virtualHeight = 600;
 
+	// Background
 	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
 	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
 
-	drawBall(&newBall);
+	// Bricks
+//	struct Block blocks[][];
+	// Brick layout
+	int block_layout[][2] = {0};
+	draw_map(block_layout);
+//	uart_puts("\layout_index = ");
+//	uart_dec(block_layout[0][0]);
+//	uart_puts("\n");
+//	uart_dec(block_layout[0][1]);
+//		uart_puts("\n");
 
-	drawBall(&newBall2);
-	while(1){
+//	struct Block block = {block_layout[0][0], block_layout[0][1], 23, 83};
+//	remove_block(&block);
+
+	// Balls
+	draw_ball(&newBall); // ball 1
+//	draw_ball(&newBall2); // ball 2
+
+	while(1) {
 //		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
-		moveBall(&newBall);
-		moveBall(&newBall2);
+		move_ball(&newBall, block_layout);
+//		move_ball(&newBall2);
 		wait_msec(10000);
 	}
 }
