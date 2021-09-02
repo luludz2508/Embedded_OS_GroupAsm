@@ -1,6 +1,8 @@
 //#include "stdio.h"
 #include "ball.h"
 #include "../framebf.h"
+	struct Ball newBall = {50, 50, 13, 25, 25, 10, 10};
+	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
 {
@@ -14,21 +16,26 @@ void wait_msec(unsigned int n)
     do {
         asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
     } while(r < t);
-}void gameRun(){
+
+}
+
+void gameRun(){
 	int physicalWidth = 800;
 	int physicalHeight = 600;
 	int virtualWidth = 800;
 	int virtualHeight = 600;
 
 	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
-	setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
-	struct Ball newBall = {50, 50, 25, 50, 49, 0.5, 60};
+	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
 
 	drawBall(&newBall);
+
+	drawBall(&newBall2);
 	while(1){
 //		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
 		moveBall(&newBall);
-		wait_msec(1);
+		moveBall(&newBall2);
+		wait_msec(10000);
 	}
 }
 

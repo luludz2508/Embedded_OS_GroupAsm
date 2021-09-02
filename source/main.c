@@ -4,18 +4,10 @@
 #include "main.h"
 #include "Game/game.h"
 #include <math.h>
-#include "function.h"
 
 void main() {
 
-
-	double radian=1.0472;
-	uart_puts("\n Cos value: ");
-	uart_dec((int)(function_cos(radian) * 1000));
-	uart_puts("\n");
-//	printf("Cos Value:%f",cos(radian));
-//	gameRun();
-
+	gameRun();
 
 }
 
