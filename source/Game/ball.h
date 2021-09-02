@@ -7,5 +7,15 @@
 //};
 //void drawBall(struct Ball* self);
 
-
-const double PI=3.14159;
+//typedef struct Ball ;
+struct Ball {
+	double x;
+	double y;
+	int radius;
+	int widthSize;
+	int heightSize;
+	double speed;
+	double angle;
+};
+void drawBall(struct Ball *self);
+void moveBall(struct Ball *self);

@@ -5,6 +5,7 @@ GAME_DIR = ./source/Game
 CFILES = $(wildcard $(SRC_DIR)/*.c)
 OFILES = $(CFILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 GAMECFILES = $(wildcard $(GAME_DIR)/*.c)
+GAMEOFILES = $(GAMECFILES:$(GAME_DIR)/%.c=$(BUILD_DIR)/%.o)
 
 CFLAGS = #-Wall -O2 -ffreestanding # -nostdinc -nostdlib -nostartfiles
 LDFLAGS = # -nostartfiles #-nostdlib
@@ -19,8 +20,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 $(BUILD_DIR)/%.o: $(GAME_DIR)/%.c
 	aarch64-none-elf-gcc $(CFLAGS) -c $< -o $@ -lm	
 
-kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
-	aarch64-none-elf-ld $(LDFLAGS) $(BUILD_DIR)/start.o $(OFILES) -T $(SRC_DIR)/link.ld -o $(BUILD_DIR)/kernel8.elf
+kernel8.img: $(BUILD_DIR)/start.o $(OFILES) $(GAMEOFILES)
+	aarch64-none-elf-ld $(LDFLAGS) $(BUILD_DIR)/start.o $(OFILES) $(GAMEOFILES) -T $(SRC_DIR)/link.ld -o $(BUILD_DIR)/kernel8.elf
 	aarch64-none-elf-objcopy -O binary $(BUILD_DIR)/kernel8.elf kernel8.img
 
 clean:

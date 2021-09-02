@@ -2,14 +2,19 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "main.h"
-#include "Game/game.c"
+#include "Game/game.h"
 //#include "image.h"
-//#include <math.h>
+#include <tgmath.h>
 //#include <stdio.h>
 
 void main() {
 
-//	gameRun();
+
+	double radian=1.0472;
+//	uart_puts("\n");
+//	uart_dec((int)(cosh(radian) * 1000));
+//	uart_puts("\n");
+	gameRun();
 
 
 }
