@@ -15,8 +15,6 @@ void wait_msec(unsigned int n)
         asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
     } while(r < t);
 }void gameRun(){
-
-	int timeCount = 0;
 	int physicalWidth = 800;
 	int physicalHeight = 600;
 	int virtualWidth = 800;

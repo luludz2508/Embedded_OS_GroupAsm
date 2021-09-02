@@ -1,3 +1,5 @@
+//#include "../gcclib/tgmath.h"
+
 void video();
 void font();
 int physicalWidth=1024;

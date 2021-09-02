@@ -1,6 +1,9 @@
 #include "ball.h"
+#include "../uart.h"
+
 #include "../framebf.h"
 #include "ballImage.h"
+
 
 const double PI=3.14159;
 
@@ -30,12 +33,12 @@ void moveBall(struct Ball *self){
 //		uart_dec((int)(cos(radian) * 1000));
 
 //	uart_puts("\n");
-//	uart_dec((int)(cos(1.0472) * 1000));
+//	uart_dec((int)(sqrt(radian) * 1000));
 //	uart_puts("\n");
 
-//	self->x+=(self->speed) * cos((double)((double)self->angle * (PI/(double)180)));
-//	self->y+=(self->speed) * sin((double)((double)self->angle * (PI/(double)180)));
-	self->x+=self->speed;
+//	self->x+=(self->speed) * cos(radian);
+//	self->y+=(self->speed) * sin(radian);
+//	self->x+=self->speed;
 	drawBall(self);
 
 }
