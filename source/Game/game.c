@@ -1,8 +1,10 @@
 //#include "stdio.h"
 #include "ball.h"
+#include "../uart.h"
+
 #include "../framebf.h"
-	struct Ball newBall = {50, 50, 13, 25, 25, 10, 10};
-	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
+	struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
+	struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
 
 void wait_msec(unsigned int n)
 {
@@ -31,11 +33,29 @@ void gameRun(){
 	drawBall(&newBall);
 
 	drawBall(&newBall2);
+	int inputCountDown=50;
+	char inputCharacter='\0';
 	while(1){
+
+		// Debouncing
+		char input=uart_getc();
+		if(input!='\0' && inputCharacter=='\0'){
+			inputCharacter=input;
+		}
+		if(inputCharacter!='\0'){
+			inputCountDown--;
+			if(inputCountDown==0){
+				uart_sendc(inputCharacter);
+				inputCharacter='\0';
+				uart_puts("\n");
+				inputCountDown=50;
+			}
+		}
+
 //		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
 		moveBall(&newBall);
 		moveBall(&newBall2);
-		wait_msec(10000);
+		wait_msec(2000);
 	}
 }
 

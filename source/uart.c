@@ -44,8 +44,11 @@ void uart_sendc(unsigned char c) {
 */
 char uart_getc() {
 	char c;
+	int count =0;
 	/* wait until data is ready (one symbol) */
 	do {
+		if(count ==100) return '\0';
+		count++;
 		asm volatile("nop");
 	} while ( !(*AUX_MU_LSR & 0x01) );
 	/* read it and return */

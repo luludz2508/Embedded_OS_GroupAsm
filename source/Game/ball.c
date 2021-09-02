@@ -52,15 +52,15 @@ void drawBall(struct Ball *self){
 void moveBall(struct Ball *self){
 
 	double radian = self->angle*PI/180;
-	uart_puts("Current x:");
-	uart_dec(self->x);
-	uart_puts("\n");
-	uart_puts("Current y:");
-	uart_dec(self->y);
-	uart_puts("\n");
-	uart_puts("Current angle:");
-	uart_dec(self->angle);
-	uart_puts("\n\n");
+//	uart_puts("Current x:");
+//	uart_dec(self->x);
+//	uart_puts("\n");
+//	uart_puts("Current y:");
+//	uart_dec(self->y);
+//	uart_puts("\n");
+//	uart_puts("Current angle:");
+//	uart_dec(self->angle);
+//	uart_puts("\n\n");
 
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
 	self->y+=(self->speed) * sinx(radian,20);
