@@ -18,4 +18,5 @@ struct Ball {
 	double angle;
 };
 void draw_ball(struct Ball *self);
-void move_ball(struct Ball *self, int block_layout[][2]);
+//void move_ball(struct Ball *self, int block_layout[][2]);
+void move_ball(struct Ball *self);
