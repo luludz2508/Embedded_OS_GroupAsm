@@ -6,9 +6,7 @@
 #include <math.h>
 
 void main() {
-
-	gameRun();
-
+	game_run();
 }
 
 

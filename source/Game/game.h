@@ -1,2 +1,2 @@
-void gameRun();
+void game_run();
 
