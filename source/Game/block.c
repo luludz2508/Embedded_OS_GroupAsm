@@ -117,11 +117,14 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 //			uart_puts("				");
 //			uart_dec(block_layout[i][1]);
 //			uart_puts("\n");
+
+			// check x: ball hit left of block
 			if (ball_x < block_layout[i][0] - 23/2) {
 				dist_x = (block_layout[i][0] - 23/2) - ball_x;
 				flag_x = 1;
 			}
-			// check x: ball hit top of bottom of block
+
+			// check x: ball hit top or bottom of block
 			else if (ball_x >= block_layout[i][0] - 23/2 &&
 					 ball_x <= block_layout[i][0] + 23/2) {
 				dist_x = 0;
@@ -130,26 +133,27 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 
 			// check x: ball hit right wall of block
 			else if (ball_x > block_layout[i][0] + 23/2) {
-				dist_x = (block_layout[i][0] + 23/2) - ball_x;
+				dist_x = ball_x - (block_layout[i][0] + 23/2);
 				flag_x = 2;
 			}
 
-			// check y
+			// check y: before block
 			if (ball_y < block_layout[i][1] - 83/2) {
 				dist_y = (block_layout[i][1] - 83/2) - ball_y;
 				flag_y = 10;
 			}
 
-			// check y
+			// check y: middle of block
 			else if (ball_y >= block_layout[i][1] - 83/2 &&
 					ball_y <= block_layout[i][1] + 83/2) {
 				dist_y = 0;
 				flag_y = 20;
 			}
 
-			// check y
+			// check y: after block
 			else if (ball_y > block_layout[i][1] + 83/2) {
-				dist_y = (block_layout[i][1] + 83/2) - ball_y;
+				uart_puts("\nline 155\n");
+				dist_y = ball_y - (block_layout[i][1] + 83/2);
 				flag_y = 30;
 			}
 
@@ -157,7 +161,6 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 			float distance_squared = (float)(dist_x*dist_x + dist_y*dist_y);
 
 			if (distance_squared <= (float)(radius*radius)) {
-				uart_puts("d");
 				// Create struct block to remove on screen
 				block.x = block_layout[i][0];
 				block.y = block_layout[i][1];
