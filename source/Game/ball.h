@@ -12,8 +12,6 @@ struct Ball {
 	double x;
 	double y;
 	int radius;
-	int widthSize;
-	int heightSize;
 	double speed;
 	double angle;
 };
