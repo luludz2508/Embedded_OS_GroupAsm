@@ -1,8 +1,8 @@
 //#include "stdio.h"
 #include "ball.h"
 #include "../uart.h"
-#include "flow.h"
 #include "../framebf.h"
+#include "stage.h"
 
 struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
 struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
@@ -86,6 +86,11 @@ void game_run() {
 			}
 			case GAME: {
 				draw_map(block_layout);
+				game_stage(&cur_stage);
+				break;
+			}
+			case RESULT:{
+				result_stage(&option, &cur_stage, 10, 5);
 				break;
 			}
 		}

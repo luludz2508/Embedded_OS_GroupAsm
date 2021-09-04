@@ -50,11 +50,11 @@ void draw_map(int block_layout[][2]) {
 //						blocks[block_index].width = 23;
 //						blocks[block_index].height = 83;
 //			block_index++;
-			uart_puts("\nx = ");
-			uart_dec(j);
-			uart_puts("		-	y = ");
-			uart_dec(i);
-			uart_puts("\n");
+//			uart_puts("\nx = ");
+//			uart_dec(j);
+//			uart_puts("		-	y = ");
+//			uart_dec(i);
+//			uart_puts("\n");
 			block_layout[layout_index][0] = j;
 			block_layout[layout_index][1] = i;
 			layout_index++;
