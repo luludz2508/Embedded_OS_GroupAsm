@@ -3,25 +3,9 @@
 #include "../uart.h"
 #include "../framebf.h"
 #include "stage.h"
+#include "block.h"
 
-struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
-struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
 //volatile stage cur_stage;
-
-void wait_msec(unsigned int n)
-{
-    register unsigned long f, t, r;
-    // Get the current counter frequency
-    asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
-    // Read the current counter
-    asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
-    // Calculate expire value for counter
-    t += ((f/1000)*n)/1000;
-    do {
-        asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
-    } while(r < t);
-
-}
 
 void game_run() {
 	int physicalWidth = 800;
@@ -48,8 +32,8 @@ void game_run() {
 //	remove_block(&block);
 
 //	draw_ball(&newBall2);
-	int inputCountDown=50;
-	char inputCharacter='\0';
+//	int inputCountDown=50;
+//	char inputCharacter='\0';
 //	while(1){
 //
 //		// Debouncing

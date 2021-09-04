@@ -37,15 +37,15 @@ void draw_ball(struct Ball *self){
 void move_ball(struct Ball *self){
 
 	double radian = self->angle*PI/180;
-	uart_puts("Current x:");
-	uart_dec(self->x);
-	uart_puts("\n");
-	uart_puts("Current y:");
-	uart_dec(self->y);
-	uart_puts("\n");
-	uart_puts("Current angle:");
-	uart_dec(self->angle);
-	uart_puts("\n\n");
+//	uart_puts("Current x:");
+//	uart_dec(self->x);
+//	uart_puts("\n");
+//	uart_puts("Current y:");
+//	uart_dec(self->y);
+//	uart_puts("\n");
+//	uart_puts("Current angle:");
+//	uart_dec(self->angle);
+//	uart_puts("\n\n");
 
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
 	self->y+=(self->speed) * sinx(radian,20);
@@ -58,30 +58,30 @@ void move_ball(struct Ball *self){
 
 	// ball hit right wall
 	if (self->x + self->radius >= 800){
-		uart_puts("\nline 69\n");
+//		uart_puts("\nline 69\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit left wall
 	if (self->x - self->radius <= 0){
-		uart_puts("\nline 73\n");
+//		uart_puts("\nline 73\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit bottom
 	if (self->y + self->radius >= 600){
-		uart_puts("\nline 77\n");
+//		uart_puts("\nline 77\n");
 		self->angle = 360 - self->angle;
 	}
 
 	// ball hit top
 	if (self->y - self->radius <= 0){
-		uart_puts("\nline 82\n");
+//		uart_puts("\nline 82\n");
 		self->angle = 360 - self->angle;
 	}
 
 	if(self->angle >= 360){
-		uart_puts("\nline 85\n");
+//		uart_puts("\nline 85\n");
 		self->angle-=360;
 	}
 }

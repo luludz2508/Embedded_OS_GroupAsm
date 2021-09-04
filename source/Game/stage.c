@@ -1,8 +1,7 @@
 #include "stage.h"
-
+#include "ball.h"
 #include "../uart.h"
 #include "../framebf.h"
-
 
 void menu_stage(stage *option, stage *main) {
 	char key = uart_getc();
@@ -59,12 +58,54 @@ void setting_stage(int *speed, stage *main) {
 			drawString(250, 400, 0x00FFFF00, "hard");
 		}
 }
+void wait_msec(unsigned int n)
+{
+    register unsigned long f, t, r;
+    // Get the current counter frequency
+    asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
+    // Read the current counter
+    asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
+    // Calculate expire value for counter
+    t += ((f/1000)*n)/1000;
+    do {
+        asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
+    } while(r < t);
 
+}
 void game_stage(stage *main) {
-	char key = uart_getc();
-	if (key == '\n') {
-		*main = RESULT;
-		clear_fb(800,600);
+	struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
+	struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
+	int inputCountDown=50;
+	char inputCharacter='\0';
+	while(1){
+		// Debouncing
+		char input=uart_getc();
+		if(input!='\0' && inputCharacter=='\0'){
+			inputCharacter=input;
+		}
+		if(inputCharacter!='\0'){
+			inputCountDown--;
+			if(inputCountDown==0){
+				switch(inputCharacter) {
+					case '\n': {
+						*main = RESULT;
+						clear_fb(800,600);
+						return;
+					}
+					default:{
+						uart_sendc(inputCharacter);
+						uart_sendc('\n');
+					}
+				}
+				inputCharacter='\0';
+				inputCountDown=50;
+			}
+		}
+
+//		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
+		move_ball(&newBall);
+		move_ball(&newBall2);
+		wait_msec(2000);
 	}
 }
 
