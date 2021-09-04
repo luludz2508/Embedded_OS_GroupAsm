@@ -3,6 +3,7 @@
 #include <math.h>
 #include "../framebf.h"
 #include "ballImage.h"
+#include "block.h"
 
 
 const double PI=3.14159;
@@ -50,54 +51,80 @@ void draw_ball(struct Ball *self){
 }
 
 void move_ball(struct Ball *self, int block_layout[][2]){
-
 	double radian = self->angle*PI/180;
-	uart_puts("Current x:");
-	uart_dec(self->x);
-	uart_puts("\n");
-	uart_puts("Current y:");
-	uart_dec(self->y);
-	uart_puts("\n");
-	uart_puts("Current angle:");
-	uart_dec(self->angle);
-	uart_puts("\n\n");
+//	uart_puts("Current x:");
+//	uart_dec(self->x);
+//	uart_puts("				");
+//	uart_puts(" y:");
+//	uart_dec(self->y);
+//	uart_puts("\n");
+//	uart_puts("Current angle:");
+//	uart_dec(self->angle);
+//	uart_puts("\n\n");
 
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
 	self->y+=(self->speed) * sinx(radian,20);
 //	self->x+=self->speed;
 	draw_ball(self);
 
-	// if hit blocks
-//	for (int i = 0; i < 20; i++) {
-//		if (self->x )
+//	for (int i = 0; i < 24; i++) {
+//		if (block_layout[i][0] > 0 && block_layout[i][1] > 0) {
+//				uart_puts("\n");
+//				uart_dec(i);
+//				uart_puts("\n");
+//				uart_dec(block_layout[i][0]);
+//				uart_puts("\n");
+//				uart_dec(block_layout[i][1]);
+//		}
 //	}
 
+	// Check collision
+	int flag = check_collision(self->x, self->y, self->radius, block_layout);
+
 	// ball hit right wall
-	if (self->x + self->radius >= 800){
+	if (self->x + self->radius >= 800 || flag == 23) {
 		uart_puts("\nline 69\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit left wall
-	if (self->x - self->radius <= 0){
+	if (self->x - self->radius <= 0 || flag == 21) {
 		uart_puts("\nline 73\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit bottom
-	if (self->y + self->radius >= 600){
+	if (self->y + self->radius >= 600 || flag == 32) {
 		uart_puts("\nline 77\n");
 		self->angle = 360 - self->angle;
 	}
 
 	// ball hit top
-	if (self->y - self->radius <= 0){
+	if (self->y - self->radius <= 0 || flag == 12) {
 		uart_puts("\nline 82\n");
 		self->angle = 360 - self->angle;
 	}
 
 	if(self->angle >= 360){
 		uart_puts("\nline 85\n");
-		self->angle-=360;
+		self->angle -= 360;
 	}
+
+	if (flag == 11) {
+
+		self->angle = 45;
+	}
+
+	if (flag == 31) {
+		self->angle = 45;
+	}
+
+	if (flag == 13) {
+		self->angle = 45;
+	}
+
+	if (flag == 33) {
+		self->angle = 45;
+	}
+
 }

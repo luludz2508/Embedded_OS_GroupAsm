@@ -3,7 +3,7 @@
 #include "../framebf.h"
 #include "block.h"
 
-	struct Ball newBall = {50, 50, 13, 25, 25, 2, 20};
+	struct Ball newBall = {50, 50, 13, 25, 25, 5, 20};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
@@ -32,7 +32,7 @@ void game_run() {
 	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
 
 	// Bricks
-//	struct Block blocks[][];
+//	struct Block blocks[4][5];
 	// Brick layout
 	int block_layout[][2] = {0};
 	draw_map(block_layout);
