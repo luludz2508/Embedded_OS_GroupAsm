@@ -1,6 +1,6 @@
 //-----------------------------------framebf.c-------------------------------------
-//#include "alphabet_lowercase.h"
-//#include "alphabet_uppercase.h"
+#include "alphabet_lowercase.h"
+#include "alphabet_uppercase.h"
 #include "mbox.h"
 #include "uart.h"
 //Use RGBA32 (32 bits for each pixel)
@@ -156,44 +156,44 @@ void setBGcolor(int width, int height,unsigned int attr){
 		}
 	}
 }
-//void drawChar_lower(int offsetX, int offsetY,unsigned int attr,int charIndex){
-//	int width=alphabet_lowercase_width[charIndex];
-//	for(int x=0; x<width; x++){
-//		for (int y=0; y<64; y++){
-//			if(alphabet_lowercase[charIndex][y*width+x]==1){
-//				drawPixelARGB32(x+offsetX, y+offsetY, attr);
-//			}
-//		}
-//	}
-//}
-//void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
-//	int width=alphabet_uppercase_width[charIndex];
-//	for(int x=0; x<width; x++){
-//		for (int y=0; y<64; y++){
-//			if(alphabet_uppercase[charIndex][y*width+x]==1){
-//				drawPixelARGB32(x+offsetX, y+offsetY, attr);
-//			}
-//		}
-//	}
-//}
-//void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
-//	int offsetWidth=offsetX;
-////	char string[]="ABCDRFGHIJKLM";
-////	for (int i=0; i<13;i++){
-//	while(*string!='\0'){
-//		if(*string>='a'&&*string<='z'){
-//			drawChar_lower(offsetWidth,offsetY,attr,*string-'a');
-//			offsetWidth +=alphabet_lowercase_width[*string-'a']+7;
-//		} else
-//		if(*string>='A'&&*string<='Z'){
-//			drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
-//			offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
-//		} else
-//		if(*string==' '){
-//			offsetWidth += 7*3;
-//		}
-//		string++;
-//
-//	}
-//
-//}
+void drawChar_lower(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=alphabet_lowercase_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(alphabet_lowercase[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=alphabet_uppercase_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(alphabet_uppercase[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
+	int offsetWidth=offsetX;
+//	char string[]="ABCDRFGHIJKLM";
+//	for (int i=0; i<13;i++){
+	while(*string!='\0'){
+		if(*string>='a'&&*string<='z'){
+			drawChar_lower(offsetWidth,offsetY,attr,*string-'a');
+			offsetWidth +=alphabet_lowercase_width[*string-'a']+7;
+		} else
+		if(*string>='A'&&*string<='Z'){
+			drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
+			offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
+		} else
+		if(*string==' '){
+			offsetWidth += 7*3;
+		}
+		string++;
+
+	}
+
+}
