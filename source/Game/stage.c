@@ -2,6 +2,7 @@
 #include "ball.h"
 #include "../uart.h"
 #include "../framebf.h"
+#include "block.h"
 
 void menu_stage(stage *option, stage *main) {
 	char key = uart_getc();
@@ -72,7 +73,19 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
-void game_stage(stage *main) {
+
+void count_down(int layout[][2]) {
+	for(int c = 0; c < 3; c++) {
+		draw_map(layout);
+		drawChar_upper(380, 170, 0x00FFFF00, c);
+		wait_msec(10000);
+		clear_fb(800,600);
+	}
+	draw_map(layout);
+}
+
+void game_stage(stage *main, int layout[][2]) {
+	count_down(layout);
 	struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
 	struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
 	int inputCountDown=50;
@@ -146,4 +159,20 @@ void clear_fb(int w, int h) {
 		for (int x = 0; x <= w; x++) {
 			drawPixelARGB32(x, y, 0x0);
 		}
+}
+
+void draw_arrow(int offsetX, int offsetY, int erase) {
+	for (int y = 0; y < 130; y++ )
+			for (int x = 0; x < 77; x++) {
+				if (erase == 1)
+					drawPixelARGB32(x+offsetX, y+offsetY, 0x0);
+				else drawPixelARGB32(x+offsetX, y+offsetY, arrow[y*width+x]);
+			}
+}
+
+void draw_button(int offsetX, int offsetY,int buttonIdx){
+	int width=button_width[buttonIdx];
+	for (int y = 0; y < 130; y++ )
+		for (int x = 0; x < width; x++)
+			drawPixelARGB32(x+offsetX, y+offsetY, button_array[buttonIdx][y*width+x]);
 }

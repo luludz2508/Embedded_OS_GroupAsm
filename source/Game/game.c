@@ -69,8 +69,7 @@ void game_run() {
 				break;
 			}
 			case GAME: {
-				draw_map(block_layout);
-				game_stage(&cur_stage);
+				game_stage(&cur_stage, block_layout);
 				break;
 			}
 			case RESULT:{
