@@ -23,11 +23,11 @@ void menu_stage(stage *option, stage *main) {
 		}
 		if(redraw){
 			if(*option == SETTING){
-				draw_arrow(114,100,1);
-				draw_arrow(114,300,0);
+				draw_arrow(114,100,1,1);
+				draw_arrow(114,300,0,1);
 			} else {
-				draw_arrow(114,100,0);
-				draw_arrow(114,300,1);
+				draw_arrow(114,100,0,1);
+				draw_arrow(114,300,1,1);
 			}
 			redraw = 0;
 		}
@@ -47,11 +47,11 @@ void setting_stage(stage *main) {
 		char key = uart_getc();
 		if(key == 'w' && setting > 0){
 			//erase option pointer
-			draw_arrow(135,setting*170+40,1);
+			draw_arrow(135,setting*170+40,1,2);
 			setting-=1;
 			redraw = 1;
 		}else if(key == 's' && setting < 3){
-			draw_arrow(135,setting*170+40,1);
+			draw_arrow(135,setting*170+40,1,2);
 			setting+=1;
 			redraw = 1;
 		}else if(key == '\n'){
@@ -61,7 +61,7 @@ void setting_stage(stage *main) {
 		}
 
 		if(redraw){
-			draw_arrow(135,setting*170+40,0);
+			draw_arrow(135,setting*170+40,0,2);
 			redraw = 0;
 		}
 	}
@@ -86,11 +86,11 @@ void player_stage(int *mode, stage *main) {
 		}
 		if(redraw){
 			if(*mode == 1){
-				draw_arrow(75,100,1);
-				draw_arrow(75,300,0);
+				draw_arrow(75,100,1,0);
+				draw_arrow(75,300,0,0);
 			} else {
-				draw_arrow(75,100,0);
-				draw_arrow(75,300,1);
+				draw_arrow(75,100,0,0);
+				draw_arrow(75,300,1,0);
 			}
 			redraw = 0;
 		}
@@ -116,11 +116,11 @@ void diff_stage(int *diff, stage *main) {
 		}
 		if(redraw){
 			if(*diff == 1){
-				draw_arrow(141,100,1);
-				draw_arrow(141,300,0);
+				draw_arrow(141,100,1,1);
+				draw_arrow(141,300,0,1);
 			} else {
-				draw_arrow(141,100,0);
-				draw_arrow(141,300,1);
+				draw_arrow(141,100,0,1);
+				draw_arrow(141,300,1,1);
 			}
 			redraw = 0;
 		}
@@ -129,7 +129,7 @@ void diff_stage(int *diff, stage *main) {
 
 void howto_stage(stage *main) {
 	draw_button(300,BACK);
-	draw_arrow(135,300,0);
+	draw_arrow(135,300,0,0);
 	while(1){
 		char key = uart_getc();
 		if(key == '\n'){
@@ -207,12 +207,12 @@ void game_stage(stage *main, int layout[][2]) {
 }
 
 void result_stage(stage *option, stage *main, int score1, int score2) {
-	if(score1 > score2)
-		drawString(250, 100, 0x00FFFF00, "player A wins");
-	else if (score1 == score2)
-		drawString(250, 100, 0x00FFFFFF, "tie game");
-	else drawString(250, 100, 0x00FFFF00, "player B wins");
-	drawString(250, 200, 0x00FFFFFF, "A  - B");
+//	if(score1 > score2)
+//		drawString(250, 100, 0x00FFFF00, "player A wins");
+//	else if (score1 == score2)
+//		drawString(250, 100, 0x00FFFFFF, "tie game");
+//	else drawString(250, 100, 0x00FFFF00, "player B wins");
+//	drawString(250, 200, 0x00FFFFFF, "A  - B");
 	draw_button(300,RESTART);
 	draw_button(500,HOME);
 	int redraw = 1;
@@ -234,11 +234,11 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 		if(redraw){
 			redraw = 0;
 			if(*option == MENU){
-				draw_arrow(135,500,0);
-				draw_arrow(135,300,1);
+				draw_arrow(135,500,0,2);
+				draw_arrow(135,300,1,2);
 			} else {
-				draw_arrow(135,500,1);
-				draw_arrow(135,300,0);
+				draw_arrow(135,500,1,2);
+				draw_arrow(135,300,0,2);
 			}
 		}
 	}
@@ -266,22 +266,22 @@ void pause_stage(stage *option, stage *main){
 		if(redraw){
 			redraw = 0;
 			if(*option == MENU){
-				draw_arrow(135,300,0);
-				draw_arrow(135,100,1);
+				draw_arrow(135,300,0,1);
+				draw_arrow(135,100,1,1);
 			} else {
-				draw_arrow(135,300,1);
-				draw_arrow(135,100,0);
+				draw_arrow(135,300,1,1);
+				draw_arrow(135,100,0,1);
 			}
 		}
 	}
 }
 
-void draw_arrow(int offsetX, int offsetY, int erase) {
+void draw_arrow(int offsetX, int offsetY, int erase, int arrowIdx) {
 	for (int y = 0; y < 130; y++ )
 			for (int x = 0; x < 77; x++) {
 				if (erase == 1)
 					drawPixelARGB32(x+offsetX, y+offsetY, 0x0);
-				else drawPixelARGB32(x+offsetX, y+offsetY, arrow[y*77+x]);
+				else drawPixelARGB32(x+offsetX, y+offsetY, arrow[arrowIdx][y*77+x]);
 			}
 }
 
