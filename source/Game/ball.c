@@ -1,6 +1,5 @@
 #include "ball.h"
 #include "../uart.h"
-#include <math.h>
 #include "../framebf.h"
 #include "ballImage.h"
 #include "block.h"

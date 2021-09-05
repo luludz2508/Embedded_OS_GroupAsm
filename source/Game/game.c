@@ -1,10 +1,12 @@
 //#include "stdio.h"
 #include "ball.h"
+#include "paddle.h"
 #include "../framebf.h"
 #include "block.h"
 
-	struct Ball newBall = {50, 250, 13, 2, 20};
+	struct Ball newBall = {50, 250, 13, 2, 176};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
+	struct Paddle leftPaddle = {'A',20, 45, 20, 90, 20};
 
 void wait_msec(unsigned int n)
 {
@@ -26,6 +28,7 @@ void game_run() {
 	int physicalHeight = 600;
 	int virtualWidth = 800;
 	int virtualHeight = 600;
+		setBGcolor(physicalWidth, physicalHeight, 0x00ffffff); // set BG to white
 
 	// Background
 	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
@@ -49,8 +52,10 @@ void game_run() {
 	draw_ball(&newBall); // ball 1
 //	draw_ball(&newBall2); // ball 2
 
+    //paddles
+    draw_paddle(&leftPaddle);
 	while(1) {
-//		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
+	    if(uart_getc)
 		move_ball(&newBall, block_layout);
 //		move_ball(&newBall2);
 		wait_msec(5000);
