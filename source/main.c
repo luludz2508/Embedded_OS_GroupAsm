@@ -3,7 +3,6 @@
 #include "framebf.h"
 #include "main.h"
 #include "Game/game.h"
-#include <math.h>
 
 void main() {
 	game_run();

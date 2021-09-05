@@ -2,7 +2,6 @@
 #include "../uart.h"
 #include "../framebf.h"
 #include "block_image.h"
-#include <math.h>
 
 // Draw brick 23x83
 void draw_block(struct Block *self) {
@@ -65,7 +64,7 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 
 	int dist_x = 0;
 	int dist_y = 0;
-	0;
+
 	int flag_x = 0;
 	int flag_y = 0;
 
