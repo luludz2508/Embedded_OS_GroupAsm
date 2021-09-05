@@ -3,7 +3,7 @@
 #include "../framebf.h"
 #include "block.h"
 
-	struct Ball newBall = {50, 50, 13, 25, 25, 5, 20};
+	struct Ball newBall = {50, 250, 13, 5, 20};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
