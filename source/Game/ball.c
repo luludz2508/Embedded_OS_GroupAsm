@@ -34,12 +34,12 @@ void draw_ball(struct Ball *self){
 			for(int y=-self->radius; y<=self->radius; y++)
 				for(int x=-self->radius; x<=self->radius; x++)
 					if(x*x+y*y <= self->radius*self->radius)
-			        	drawPixelARGB32((int)(x+self->x- self->radius-(self->speed) * sinx(PI/2-self->angle*PI/180,20)), (int)(y+self->y- self->radius- (self->speed) * sinx(self->angle*PI/180,20)), 0x0);
+			        	drawPixelARGB32((int)(x+self->x-(self->speed) * sinx(PI/2-self->angle*PI/180,20)), (int)(y+self->y- (self->speed) * sinx(self->angle*PI/180,20)), 0x0);
 //						map[(int)(x+self->x- self->radius -self->speed)][(int)(y+self->y- self->radius)]= 0x00;
 			for(int y=-self->radius; y<=self->radius; y++)
 				    for(int x=-self->radius; x<=self->radius; x++)
 				        if(x*x+y*y <= self->radius*self->radius)
-				        	drawPixelARGB32((int)(x+self->x- self->radius), (int)(y+self->y- self->radius), ballImage[(y+self->heightSize/2)*self->widthSize+x+self->widthSize/2]);
+				        	drawPixelARGB32((int)(x+self->x), (int)(y+self->y), ballImage[(y+self->heightSize/2)*self->widthSize+x+self->widthSize/2]);
 //				        	map[(int)(x+self->x- self->radius)][(int)(y+self->y- self->radius)]= ballImage[(y+self->heightSize/2)*self->widthSize+x+self->widthSize/2];
 //		}
 //	}
