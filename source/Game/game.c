@@ -3,7 +3,7 @@
 #include "../framebf.h"
 #include "block.h"
 
-	struct Ball newBall = {50, 250, 13, 5, 20};
+	struct Ball newBall = {50, 250, 13, 2, 20};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
@@ -53,7 +53,7 @@ void game_run() {
 //		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
 		move_ball(&newBall, block_layout);
 //		move_ball(&newBall2);
-		wait_msec(10000);
+		wait_msec(5000);
 	}
 }
 
