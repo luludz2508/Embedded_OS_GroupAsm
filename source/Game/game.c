@@ -1,10 +1,10 @@
 //#include "stdio.h"
 #include "ball.h"
-#include "../uart.h"
-
 #include "../framebf.h"
-	struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
-	struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
+#include "block.h"
+
+	struct Ball newBall = {50, 50, 13, 25, 25, 5, 20};
+//	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 void wait_msec(unsigned int n)
 {
@@ -32,7 +32,7 @@ void game_run() {
 	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
 
 	// Bricks
-//	struct Block blocks[][];
+//	struct Block blocks[4][5];
 	// Brick layout
 	int block_layout[][2] = {0};
 	draw_map(block_layout);
@@ -45,30 +45,15 @@ void game_run() {
 //	struct Block block = {block_layout[0][0], block_layout[0][1], 23, 83};
 //	remove_block(&block);
 
-	draw_ball(&newBall2);
-	int inputCountDown=50;
-	char inputCharacter='\0';
-	while(1){
+	// Balls
+	draw_ball(&newBall); // ball 1
+//	draw_ball(&newBall2); // ball 2
 
-		// Debouncing
-		char input=uart_getc();
-		if(input!='\0' && inputCharacter=='\0'){
-			inputCharacter=input;
-		}
-		if(inputCharacter!='\0'){
-			inputCountDown--;
-			if(inputCountDown==0){
-				uart_sendc(inputCharacter);
-				inputCharacter='\0';
-				uart_puts("\n");
-				inputCountDown=50;
-			}
-		}
-
+	while(1) {
 //		setBGcolor(physicalWidth, physicalHeight, 0x0000); // set BG to white
-		move_ball(&newBall);
-		move_ball(&newBall2);
-		wait_msec(2000);
+		move_ball(&newBall, block_layout);
+//		move_ball(&newBall2);
+		wait_msec(10000);
 	}
 }
 
