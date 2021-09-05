@@ -55,25 +55,30 @@ void move_ball(struct Ball *self, int block_layout[][2]){
 
 	// ball hit right wall
 	if (self->x + self->radius >= 800 || flag == 23) {
+		uart_puts("\nline 69\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit left wall
 	if (self->x - self->radius <= 0 || flag == 21) {
+		uart_puts("\nline 73\n");
 		self->angle = 180 - self->angle;
 	}
 
 	// ball hit bottom
 	if (self->y + self->radius >= 600 || flag == 32) {
+		uart_puts("\nline 77\n");
 		self->angle = 360 - self->angle;
 	}
 
 	// ball hit top
 	if (self->y - self->radius <= 0 || flag == 12) {
+		uart_puts("\nline 82\n");
 		self->angle = 360 - self->angle;
 	}
 
 	if(self->angle >= 360){
+		uart_puts("\nline 85\n");
 		self->angle -= 360;
 	}
 
