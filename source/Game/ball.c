@@ -5,15 +5,15 @@
 #include "block.h"
 
 
-const double PI=3.14159;
+const float PI=3.14159;
 
-double sinx(double x, int n)
+float sinx(float x, int n)
 {
-   double t = x;
-   double sine = t;
+   float t = x;
+   float sine = t;
    for ( int a=1; a<n; ++a)
    {
-      double mult = -x*x/((2*a+1)*(2*a));
+      float mult = -x*x/((2*a+1)*(2*a));
       t *= mult;
       sine += t;
    }

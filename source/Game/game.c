@@ -2,12 +2,18 @@
 #include "ball.h"
 #include "paddle.h"
 #include "../framebf.h"
+#include "../uart.h"
 #include "block.h"
 
-	struct Ball newBall = {50, 250, 13, 2, 176};
+struct Ball newBall = {50, 250, 13, 2, 76};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
-	struct Paddle leftPaddle = {'A',20, 45, 20, 90, 20};
 
+struct Paddle leftPaddle = {'A',20, 45, 20, 90, 50};
+struct Paddle rightPaddle = {'B',780, 45, 20, 90, 50};
+
+char input, keyDownA, keyDownB;
+int countLoopA=0;
+int countLoopB=0;
 void wait_msec(unsigned int n)
 {
     register unsigned long f, t, r;
@@ -54,8 +60,38 @@ void game_run() {
 
     //paddles
     draw_paddle(&leftPaddle);
+    draw_paddle(&rightPaddle);
 	while(1) {
-	    if(uart_getc)
+	    input=uart_getc();
+	    if(input!='\0' && countLoopA==0){
+            if (input=='w'|| input=='s'){
+	            move_paddle(&leftPaddle,input);
+                keyDownA=input;
+            }
+	    }
+	    if(input!='\0' && countLoopB==0){
+             if(input=='i'|| input=='k'){
+                move_paddle(&rightPaddle,input);
+                keyDownB=input;
+            }
+	    }
+        if(keyDownA!=0){
+            countLoopA++;
+            if (countLoopA==20){
+                countLoopA=0;
+                keyDownA=0;
+            }
+        }
+        if(keyDownB!=0){
+             countLoopB++;
+             if (countLoopB==20){
+                 countLoopB=0;
+                 keyDownB=0;
+             }
+         }
+
+//        check_collision_paddle1(&newBall, &leftPaddle);
+//        check_collision_paddle1(&newBall, &rightPaddle);
 		move_ball(&newBall, block_layout);
 //		move_ball(&newBall2);
 		wait_msec(5000);
