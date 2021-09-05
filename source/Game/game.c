@@ -8,10 +8,10 @@
 //volatile stage cur_stage;
 
 void game_run() {
-	int physicalWidth = 800;
-	int physicalHeight = 600;
-	int virtualWidth = 800;
-	int virtualHeight = 600;
+	int physicalWidth = 1024;
+	int physicalHeight = 768;
+	int virtualWidth = 1024;
+	int virtualHeight = 768;
 	int speed = 0;
 	// Background
 	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
