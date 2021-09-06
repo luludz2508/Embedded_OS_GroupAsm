@@ -44,17 +44,28 @@ void uart_sendc(unsigned char c) {
 */
 char uart_getc() {
 	char c;
-	int count =0;
+//	int count =0;
 	/* wait until data is ready (one symbol) */
 	do {
-		if(count ==100) return '\0';
-		count++;
+//		if(count ==100) return '\0';
+//		count++;
 		asm volatile("nop");
 	} while ( !(*AUX_MU_LSR & 0x01) );
 	/* read it and return */
 	c = (char)(*AUX_MU_IO);
 	/* convert carriage return to newline */
 	return (c == '\r' ? '\n' : c);
+}
+unsigned int uart_isReadyByteReady(){
+    return (*AUX_MU_LSR &0x01);
+}
+
+unsigned char getUart(){
+    unsigned char ch=0;
+    if ( uart_isReadyByteReady()){
+        ch=uart_getc();
+        return ch;
+    }
 }
 /**
 * Display a string

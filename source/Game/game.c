@@ -5,7 +5,7 @@
 #include "../uart.h"
 #include "block.h"
 
-struct Ball newBall = {50, 250, 13, 2, 76};
+struct Ball newBall = {50, 250, 13, 2, 0};
 //	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
 
 struct Paddle leftPaddle = {'A',20, 45, 20, 90, 50};
@@ -28,7 +28,94 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
+void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
+    float dist_x= ball->x - pad->x - pad->width/2;
+    float dist_y= ball->y - pad->y - pad->height/2;
+    int flag_x=0, flag_y=0;
+    // check x: ball hit left of block
+        if (ball->x < pad->x - pad->width/2) {
+            dist_x = (pad->x ) - ball->x - pad->width/2;
+            flag_x = 1;
+        }
+        // check x: ball hit top or bottom of block
+//        else if (ball->x >= pad->x  && ball->x <= pad->x  + pad->width) {
+//            dist_x = 0;
+//            flag_x = 2;
+//        }
+        // check x: ball hit right wall of block
+        else if (ball->x > pad->x  + pad->width/2) {
+            dist_x = ball->x - (pad->x  + pad->width/2);
+            flag_x = 3;
+        }
 
+
+     // check y: before block
+         if (ball->y <= pad->y - pad->height/2) {
+             dist_y = (pad->y) - ball->y - pad->height/2;
+             flag_y = 10;
+         }
+
+         // check y: middle of block
+         else if (ball->y >= pad->y - pad->height/2&&
+                 ball->y <= pad->y + pad->height/2) {
+             dist_y = 0;
+             flag_y = 20;
+         }
+
+         // check y: after block
+         else if (ball->y > pad->y + pad->height/2) {
+             dist_y = ball->y - (pad->y + pad->height/2);
+             flag_y = 30;
+         }
+    float width_dist = dist_x*dist_x +dist_y*dist_y;
+    int flag=flag_x+flag_y;
+    if (width_dist <= (float)(ball->radius * ball->radius)){
+        if (ball->x + ball->radius >= 800 || flag == 23) {
+            ball->angle = 180 - ball->angle;
+        }
+
+        // ball hit left wall
+        if (ball->x - ball->radius <= 0 || flag == 21) {
+            ball->angle = 180 - ball->angle;
+        }
+
+        // ball hit bottom
+        if (ball->y + ball->radius >= 600 || flag == 32) {
+            ball->angle = 360 - ball->angle;
+        }
+
+        // ball hit top
+        if (ball->y - ball->radius <= 0 || flag == 12) {
+            ball->angle = 360 - ball->angle;
+        }
+
+        if(ball->angle >= 360){
+            ball->angle -= 360;
+        }
+
+        // if hit top left corner
+        if (flag == 11) {
+            ball->angle = 225;
+        }
+
+        // if hit bottom left corner
+        if (flag == 31) {
+            ball->angle = 135;
+        }
+
+        // if hit top right corner
+        if (flag == 13) {
+            ball->angle = 315;
+        }
+
+        // if hit bottom right corner
+        if (flag == 33) {
+            ball->angle = 45;
+        }
+        draw_paddle_image(pad);
+    }
+
+}
 void game_run() {
 	int physicalWidth = 800;
 	int physicalHeight = 600;
@@ -41,28 +128,18 @@ void game_run() {
 	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
 
 	// Bricks
-//	struct Block blocks[4][5];
-	// Brick layout
+
 	int block_layout[][2] = {0};
 	draw_map(block_layout);
-//	uart_puts("\layout_index = ");
-//	uart_dec(block_layout[0][0]);
-//	uart_puts("\n");
-//	uart_dec(block_layout[0][1]);
-//		uart_puts("\n");
-
-//	struct Block block = {block_layout[0][0], block_layout[0][1], 23, 83};
-//	remove_block(&block);
 
 	// Balls
 	draw_ball(&newBall); // ball 1
-//	draw_ball(&newBall2); // ball 2
-
+    //	draw_ball(&newBall2); // ball 2
     //paddles
     draw_paddle(&leftPaddle);
     draw_paddle(&rightPaddle);
 	while(1) {
-	    input=uart_getc();
+	    input=getUart();
 	    if(input!='\0' && countLoopA==0){
             if (input=='w'|| input=='s'){
 	            move_paddle(&leftPaddle,input);
@@ -90,8 +167,8 @@ void game_run() {
              }
          }
 
-//        check_collision_paddle1(&newBall, &leftPaddle);
-//        check_collision_paddle1(&newBall, &rightPaddle);
+        check_collision_paddle1(&newBall, &leftPaddle);
+        check_collision_paddle1(&newBall, &rightPaddle);
 		move_ball(&newBall, block_layout);
 //		move_ball(&newBall2);
 		wait_msec(5000);

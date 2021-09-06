@@ -21,15 +21,15 @@ float sinx(float x, int n)
 }
 
 void draw_ball(struct Ball *self){
-
 	float radian = self->angle*PI/180;
 	int r = self->radius;
+    float ball_x= self -> x;
+    float ball_y= self -> y;
 
 	for(int y = -r; y <= r; y++)
 		for(int x = -r; x <= r; x++)
 			if(x*x + y*y <= r*r)
-				drawPixelARGB32((int)(x + self->x), (int)(y + self->y), 0x0);
-
+				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), 0x0);
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
 	self->y+=(self->speed) * sinx(radian,20);
 
