@@ -62,10 +62,14 @@ unsigned int uart_isReadyByteReady(){
 
 unsigned char getUart(){
     unsigned char ch=0;
+
     if ( uart_isReadyByteReady()){
         ch=uart_getc();
         return ch;
     }
+
+    // solve warning "control reaches end of non-void function"
+    return 0;
 }
 /**
 * Display a string

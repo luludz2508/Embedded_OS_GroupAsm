@@ -20,3 +20,6 @@ void uart_puts(char *s);
 
 void uart_hex(unsigned int d);
 void uart_dec(int num);
+
+unsigned int uart_isReadyByteReady();
+unsigned char getUart();

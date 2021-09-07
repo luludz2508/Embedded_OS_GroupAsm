@@ -5,6 +5,7 @@
 
 const int brick_width = 23;
 const int brick_height = 83;
+const int max_blocks = 64;
 
 // Draw brick brick_widthxbrick_height
 void draw_block(struct Block *self) {
@@ -22,6 +23,8 @@ void remove_block(struct Block *self) {
 			drawPixelARGB32(x + self->x, y + self->y, 0x00);
 		}
 	}
+
+	uart_puts("remove block");
 }
 
 // Draw map
@@ -31,9 +34,9 @@ void draw_map(int block_layout[][2]) {
 	int layout_index = 0;
 
 	// y-axis
-	for (int i = 80; i <= 505; i+=85) {
+	for (int i = 100; i <= 690; i+=83) {
 		// x-axis
-		for (int j = 310; j <= 460; j+=50) {
+		for (int j = 408; j <= 573; j+=23) {
 			block.x = j;
 			block.y = i;
 			block.width = brick_width;
@@ -70,7 +73,7 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 	int flag_x = 0;
 	int flag_y = 0;
 
-	for (int i = 0; i < 24; i++) {
+	for (int i = 0; i < max_blocks; i++) {
 		if (block_layout[i][0] > -1 && block_layout[i][1] > -1) {
 			// check x: ball hit left wall of block
 //			uart_dec(ball_x);
