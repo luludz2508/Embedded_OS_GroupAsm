@@ -5,15 +5,16 @@
 #include "../uart.h"
 #include "block.h"
 
-struct Ball newBall = {50, 250, 13, 2, 0};
-//	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
+struct Ball new_ball = {50, 250, 13, 2, 0};
+//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
 
-struct Paddle leftPaddle = {'A',20, 45, 20, 90, 50};
-struct Paddle rightPaddle = {'B',780, 45, 20, 90, 50};
+struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
+struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
 
-char input, keyDownA, keyDownB;
-int countLoopA=0;
-int countLoopB=0;
+char input, key_down_A, key_down_B;
+int count_loop_A = 0;
+int count_loop_B = 0;
+
 void wait_msec(unsigned int n)
 {
     register unsigned long f, t, r;
@@ -29,46 +30,50 @@ void wait_msec(unsigned int n)
 
 }
 void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
-    float dist_x= ball->x - pad->x - pad->width/2;
-    float dist_y= ball->y - pad->y - pad->height/2;
-    int flag_x=0, flag_y=0;
+    float dist_x = ball->x - pad->x - pad->width/2;
+    float dist_y = ball->y - pad->y - pad->height/2;
+    int flag_x = 0, flag_y = 0;
+
     // check x: ball hit left of block
-        if (ball->x < pad->x - pad->width/2) {
-            dist_x = (pad->x ) - ball->x - pad->width/2;
-            flag_x = 1;
-        }
+    if (ball->x < pad->x - pad->width/2) {
+    	dist_x = (pad->x ) - ball->x - pad->width/2;
+        flag_x = 1;
+    }
         // check x: ball hit top or bottom of block
 //        else if (ball->x >= pad->x  && ball->x <= pad->x  + pad->width) {
 //            dist_x = 0;
 //            flag_x = 2;
 //        }
-        // check x: ball hit right wall of block
-        else if (ball->x > pad->x  + pad->width/2) {
-            dist_x = ball->x - (pad->x  + pad->width/2);
-            flag_x = 3;
-        }
+
+    // check x: ball hit right wall of block
+    else if (ball->x > pad->x  + pad->width/2) {
+    	dist_x = ball->x - (pad->x  + pad->width/2);
+    	flag_x = 3;
+    }
 
 
      // check y: before block
-         if (ball->y <= pad->y - pad->height/2) {
-             dist_y = (pad->y) - ball->y - pad->height/2;
-             flag_y = 10;
-         }
+     if (ball->y <= pad->y - pad->height/2) {
+    	 dist_y = (pad->y) - ball->y - pad->height/2;
+         flag_y = 10;
+     }
 
-         // check y: middle of block
-         else if (ball->y >= pad->y - pad->height/2&&
-                 ball->y <= pad->y + pad->height/2) {
-             dist_y = 0;
-             flag_y = 20;
-         }
+     // check y: middle of block
+     else if (ball->y >= pad->y - pad->height/2&&
+         ball->y <= pad->y + pad->height/2) {
+         dist_y = 0;
+         flag_y = 20;
+     }
 
-         // check y: after block
-         else if (ball->y > pad->y + pad->height/2) {
-             dist_y = ball->y - (pad->y + pad->height/2);
-             flag_y = 30;
-         }
-    float width_dist = dist_x*dist_x +dist_y*dist_y;
-    int flag=flag_x+flag_y;
+     // check y: after block
+     else if (ball->y > pad->y + pad->height/2) {
+    	 dist_y = ball->y - (pad->y + pad->height/2);
+         flag_y = 30;
+
+     }
+    float width_dist = dist_x*dist_x + dist_y*dist_y;
+    int flag = flag_x + flag_y;
+
     if (width_dist <= (float)(ball->radius * ball->radius)){
         if (ball->x + ball->radius >= 800 || flag == 23) {
             ball->angle = 180 - ball->angle;
@@ -112,64 +117,80 @@ void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
         if (flag == 33) {
             ball->angle = 45;
         }
+
         draw_paddle_image(pad);
     }
 
 }
 void game_run() {
-	int physicalWidth = 800;
-	int physicalHeight = 600;
-	int virtualWidth = 800;
-	int virtualHeight = 600;
-		setBGcolor(physicalWidth, physicalHeight, 0x00ffffff); // set BG to white
+	int physical_width = 1024;
+	int physical_height = 768;
+	int virtual_width = 1024;
+	int virtual_height = 768;
 
 	// Background
-	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
-	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
+	// Set background color
+	setBGcolor(physical_width, physical_height, 0x00ffffff); // set BG to white
+	// Init framebuffer
+	framebf_init(physical_width, physical_height, virtual_width, virtual_height);
+	// Set background color
+	setBGcolor(physical_width, physical_height, 0x00); // set BG to white
 
-	// Bricks
-
-	int block_layout[][2] = {0};
+	// Lay out bricks
+	int block_layout[][2] = {0}; // positions of top left point of bricks
 	draw_map(block_layout);
 
 	// Balls
-	draw_ball(&newBall); // ball 1
-    //	draw_ball(&newBall2); // ball 2
-    //paddles
-    draw_paddle(&leftPaddle);
-    draw_paddle(&rightPaddle);
+	draw_ball(&new_ball); // ball 1
+    //	draw_ball(&new_ball2); // ball 2
+
+	//Paddles
+    draw_paddle(&left_paddle);
+    draw_paddle(&right_paddle);
+
 	while(1) {
-	    input=getUart();
-	    if(input!='\0' && countLoopA==0){
-            if (input=='w'|| input=='s'){
-	            move_paddle(&leftPaddle,input);
-                keyDownA=input;
+		// Get player input
+	    input = getUart();
+
+	    // Player A (right) paddle control
+	    if(input != '\0' && count_loop_A == 0){
+            if (input == 'w' || input == 's'){
+	            move_paddle(&left_paddle, input);
+                key_down_A = input;
             }
 	    }
-	    if(input!='\0' && countLoopB==0){
-             if(input=='i'|| input=='k'){
-                move_paddle(&rightPaddle,input);
-                keyDownB=input;
+
+	    // Player B (left) paddle control
+	    if(input != '\0' && count_loop_B == 0){
+             if(input == 'i' || input == 'k'){
+                move_paddle(&right_paddle, input);
+                key_down_B = input;
             }
 	    }
-        if(keyDownA!=0){
-            countLoopA++;
-            if (countLoopA==20){
-                countLoopA=0;
-                keyDownA=0;
+
+	    // Player A button debounce
+        if(key_down_A != 0){
+            count_loop_A++;
+            // Delay button press
+            if (count_loop_A == 20){
+                count_loop_A = 0;
+                key_down_A =0;
             }
         }
-        if(keyDownB!=0){
-             countLoopB++;
-             if (countLoopB==20){
-                 countLoopB=0;
-                 keyDownB=0;
+
+        // Player B button debounce
+        if(key_down_B != 0){
+             count_loop_B++;
+             // Delay button press
+             if (count_loop_B == 20){
+                 count_loop_B = 0;
+                 key_down_B = 0;
              }
          }
 
-        check_collision_paddle1(&newBall, &leftPaddle);
-        check_collision_paddle1(&newBall, &rightPaddle);
-		move_ball(&newBall, block_layout);
+        check_collision_paddle1(&new_ball, &left_paddle);
+        check_collision_paddle1(&new_ball, &right_paddle);
+		move_ball(&new_ball, block_layout);
 //		move_ball(&newBall2);
 		wait_msec(5000);
 	}
