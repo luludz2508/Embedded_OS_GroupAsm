@@ -23,6 +23,8 @@ void remove_block(struct Block *self) {
 			drawPixelARGB32(x + self->x, y + self->y, 0x00);
 		}
 	}
+
+	uart_puts("remove block");
 }
 
 // Draw map

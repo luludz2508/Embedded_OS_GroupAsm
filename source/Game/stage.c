@@ -3,6 +3,17 @@
 #include "../uart.h"
 #include "../framebf.h"
 #include "block.h"
+#include "paddle.h"
+
+struct Ball new_ball = {50, 250, 13, 2, 0};
+//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
+
+struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
+struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
+
+char input, key_down_A, key_down_B;
+int count_loop_A = 0;
+int count_loop_B = 0;
 
 void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
@@ -140,21 +151,6 @@ void howto_stage(stage *main) {
 	}
 }
 
-void wait_msec(unsigned int n)
-{
-    register unsigned long f, t, r;
-    // Get the current counter frequency
-    asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
-    // Read the current counter
-    asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
-    // Calculate expire value for counter
-    t += ((f/1000)*n)/1000;
-    do {
-        asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
-    } while(r < t);
-
-}
-
 void count_down(int layout[][2]) {
 	for(int c = 0; c < 3; c++) {
 		draw_map(layout);
@@ -165,44 +161,87 @@ void count_down(int layout[][2]) {
 	draw_map(layout);
 }
 
-void game_stage(stage *main, int layout[][2]) {
-	count_down(layout);
-	struct Ball newBall = {50, 50, 13, 25, 25, 2, 70};
-	struct Ball newBall2 = {400, 300, 13, 25, 25, 2, 10};
-	int inputCountDown=50;
-	char inputCharacter='\0';
+void game_stage(stage *main, int block_layout[][2]) {
+
+	count_down(block_layout);
+//	struct Ball new_ball = {50, 50, 13, 25, 25, 0.5, 70};
+//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 2, 10};
+//	struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
+//	struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
+
+//	char input, key_down_A, key_down_B;
+//	int count_loop_A = 0;
+//	int count_loop_B = 0;
+
+	// Draw map
+	draw_map(block_layout);
+
+	// Balls
+	draw_ball(&new_ball); // ball 1
+    //	draw_ball(&new_ball2); // ball 2
+
+	//Paddles
+    draw_paddle(&left_paddle);
+    draw_paddle(&right_paddle);
+
 	while(1){
-		// Debouncing
-		char input=uart_getc();
-		if(input!='\0' && inputCharacter=='\0'){
-			inputCharacter=input;
-		}
-		if(inputCharacter!='\0'){
-			inputCountDown--;
-			if(inputCountDown==0){
-				switch(inputCharacter) {
-					case '\n': {
-						*main = RESULT;
-						setBGcolor(1024,768,0x0);
-						return;
-					}
-					case 27: {
-						*main = PAUSE;
-						setBGcolor(1024,768,0x0);
-						return;
-					}
-					default:{
-						uart_sendc(inputCharacter);
-						uart_sendc('\n');
-					}
-				}
-				inputCharacter='\0';
-				inputCountDown=50;
+		// Get player input
+		input = getUart();
+
+		// Player A (right) paddle control
+		if(input != '\0' && count_loop_A == 0){
+			if (input == 'w' || input == 's'){
+				move_paddle(&left_paddle, input);
+				key_down_A = input;
 			}
 		}
-		move_ball(&newBall);
-		move_ball(&newBall2);
-		wait_msec(2000);
+
+		// Player B (left) paddle control
+		if(input != '\0' && count_loop_B == 0){
+			 if(input == 'i' || input == 'k'){
+				move_paddle(&right_paddle, input);
+				key_down_B = input;
+			}
+		}
+
+		// Player A button debounce
+		if(key_down_A != 0){
+			count_loop_A++;
+			// Delay button press
+			if (count_loop_A == 20){
+				count_loop_A = 0;
+				key_down_A =0;
+			}
+		}
+
+		// Player B button debounce
+		if(key_down_B != 0){
+			 count_loop_B++;
+			 // Delay button press
+			 if (count_loop_B == 20){
+				 count_loop_B = 0;
+				 key_down_B = 0;
+			 }
+		 }
+
+		if (input == 27) {
+			*main = PAUSE;
+			setBGcolor(1024,768,0x0);
+			return;
+		}
+
+		check_collision_paddle1(&new_ball, &left_paddle);
+		check_collision_paddle1(&new_ball, &right_paddle);
+
+		// if ball hits walls
+		if (!move_ball(&new_ball, block_layout)) {
+			*main = RESULT;
+			setBGcolor(1024,768,0x0);
+			return;
+		}
+//		move_ball(&new_ball, block_layout);
+
+		wait_msec(5000);
 	}
 }
 

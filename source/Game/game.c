@@ -3,17 +3,18 @@
 #include "paddle.h"
 #include "../framebf.h"
 #include "../uart.h"
+#include "stage.h"
 #include "block.h"
 
-struct Ball new_ball = {50, 250, 13, 2, 0};
-//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
-
-struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
-struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
-
-char input, key_down_A, key_down_B;
-int count_loop_A = 0;
-int count_loop_B = 0;
+//struct Ball new_ball = {50, 250, 13, 2, 0};
+////	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
+//
+//struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
+//struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
+//
+//char input, key_down_A, key_down_B;
+//int count_loop_A = 0;
+//int count_loop_B = 0;
 
 void wait_msec(unsigned int n)
 {
@@ -138,61 +139,55 @@ void game_run() {
 
 	// Lay out bricks
 	int block_layout[][2] = {0}; // positions of top left point of bricks
-	draw_map(block_layout);
+
+	// Initialize state
+	stage cur_stage = MENU;
+	stage option = GAME;
+	int mode = 0, diff = 0;
 
 	// Balls
-	draw_ball(&new_ball); // ball 1
+//	draw_ball(&new_ball); // ball 1
     //	draw_ball(&new_ball2); // ball 2
 
 	//Paddles
-    draw_paddle(&left_paddle);
-    draw_paddle(&right_paddle);
+//    draw_paddle(&left_paddle);
+//    draw_paddle(&right_paddle);
 
 	while(1) {
-		// Get player input
-	    input = getUart();
-
-	    // Player A (right) paddle control
-	    if(input != '\0' && count_loop_A == 0){
-            if (input == 'w' || input == 's'){
-	            move_paddle(&left_paddle, input);
-                key_down_A = input;
-            }
-	    }
-
-	    // Player B (left) paddle control
-	    if(input != '\0' && count_loop_B == 0){
-             if(input == 'i' || input == 'k'){
-                move_paddle(&right_paddle, input);
-                key_down_B = input;
-            }
-	    }
-
-	    // Player A button debounce
-        if(key_down_A != 0){
-            count_loop_A++;
-            // Delay button press
-            if (count_loop_A == 20){
-                count_loop_A = 0;
-                key_down_A =0;
-            }
-        }
-
-        // Player B button debounce
-        if(key_down_B != 0){
-             count_loop_B++;
-             // Delay button press
-             if (count_loop_B == 20){
-                 count_loop_B = 0;
-                 key_down_B = 0;
-             }
-         }
-
-        check_collision_paddle1(&new_ball, &left_paddle);
-        check_collision_paddle1(&new_ball, &right_paddle);
-		move_ball(&new_ball, block_layout);
-//		move_ball(&newBall2);
-		wait_msec(5000);
+		switch(cur_stage) {
+			case MENU: {
+				menu_stage(&option, &cur_stage);
+				break;
+			}
+			case SETTING: {
+				setting_stage(&cur_stage);
+				break;
+			}
+			case GAME: {
+				game_stage(&cur_stage, block_layout);
+				break;
+			}
+			case PLAYER: {
+				player_stage(&mode, &cur_stage);
+				break;
+			}
+			case DIFF: {
+				diff_stage(&diff, &cur_stage);
+				break;
+			}
+			case HOWTO: {
+				howto_stage(&cur_stage);
+				break;
+			}
+			case RESULT:{
+				result_stage(&option, &cur_stage, 10, 5);
+				break;
+			}
+			case PAUSE: {
+				pause_stage(&option, &cur_stage);
+				break;
+			}
+		}
 	}
 }
 

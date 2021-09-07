@@ -1,6 +1,6 @@
 //-----------------------------------framebf.c-------------------------------------
-//#include "alphabet_lowercase.h"
-//#include "alphabet_uppercase.h"
+#include "alphabet_lowercase.h"
+#include "alphabet_uppercase.h"
 #include "mbox.h"
 #include "uart.h"
 //Use RGBA32 (32 bits for each pixel)
@@ -156,26 +156,26 @@ void setBGcolor(int width, int height,unsigned int attr){
 		}
 	}
 }
-//void drawChar_lower(int offsetX, int offsetY,unsigned int attr,int charIndex){
-//	int width=alphabet_lowercase_width[charIndex];
-//	for(int x=0; x<width; x++){
-//		for (int y=0; y<64; y++){
-//			if(alphabet_lowercase[charIndex][y*width+x]==1){
-//				drawPixelARGB32(x+offsetX, y+offsetY, attr);
-//			}
-//		}
-//	}
-//}
-//void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
-//	int width=alphabet_uppercase_width[charIndex];
-//	for(int x=0; x<width; x++){
-//		for (int y=0; y<64; y++){
-//			if(alphabet_uppercase[charIndex][y*width+x]==1){
-//				drawPixelARGB32(x+offsetX, y+offsetY, attr);
-//			}
-//		}
-//	}
-//}
+void drawChar_lower(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=alphabet_lowercase_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(alphabet_lowercase[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=alphabet_uppercase_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(alphabet_uppercase[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
 //void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 //	int offsetWidth=offsetX;
 ////	char string[]="ABCDRFGHIJKLM";

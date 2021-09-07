@@ -4,7 +4,6 @@
 #include "ball_image.h"
 #include "block.h"
 
-
 const float PI=3.14159;
 
 float sinx(float x, int n)
