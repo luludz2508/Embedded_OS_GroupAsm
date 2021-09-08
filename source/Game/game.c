@@ -3,17 +3,19 @@
 #include "paddle.h"
 #include "../framebf.h"
 #include "../uart.h"
+#include "stage.h"
 #include "block.h"
 
-struct Ball newBall = {100, 250, 8, 1 , 22};
-struct Ball newBall2 = {100, 250, 10, 1 , 145};
+//struct Ball new_ball = {50, 250, 13, 2, 0};
+////	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
+//
+//struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
+//struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
+//
+//char input, key_down_A, key_down_B;
+//int count_loop_A = 0;
+//int count_loop_B = 0;
 
-struct Paddle leftPaddle = {'A',20, 45, 20, 90, 50};
-struct Paddle rightPaddle = {'B',780, 45, 20, 90, 50};
-
-char input, keyDownA, keyDownB;
-int countLoopA=0;
-int countLoopB=0;
 void wait_msec(unsigned int n)
 {
     register unsigned long f, t, r;
@@ -28,47 +30,51 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
-void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
-    float dist_x= ball->x - pad->x - pad->width/2;
-    float dist_y= ball->y - pad->y - pad->height/2;
-    int flag_x=0, flag_y=0;
+void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
+    float dist_x = ball->x - pad->x - pad->width/2;
+    float dist_y = ball->y - pad->y - pad->height/2;
+    int flag_x = 0, flag_y = 0;
+
     // check x: ball hit left of block
-        if (ball->x < pad->x - pad->width/2) {
-            dist_x = (pad->x ) - ball->x - pad->width/2;
-            flag_x = 1;
-        }
+    if (ball->x < pad->x - pad->width/2) {
+    	dist_x = (pad->x ) - ball->x - pad->width/2;
+        flag_x = 1;
+    }
         // check x: ball hit top or bottom of block
 //        else if (ball->x >= pad->x  && ball->x <= pad->x  + pad->width) {
 //            dist_x = 0;
 //            flag_x = 2;
 //        }
-        // check x: ball hit right wall of block
-        else if (ball->x > pad->x  + pad->width/2) {
-            dist_x = ball->x - (pad->x  + pad->width/2);
-            flag_x = 3;
-        }
+
+    // check x: ball hit right wall of block
+    else if (ball->x > pad->x  + pad->width/2) {
+    	dist_x = ball->x - (pad->x  + pad->width/2);
+    	flag_x = 3;
+    }
 
 
      // check y: before block
-         if (ball->y <= pad->y - pad->height/2) {
-             dist_y = (pad->y) - ball->y - pad->height/2;
-             flag_y = 10;
-         }
+     if (ball->y <= pad->y - pad->height/2) {
+    	 dist_y = (pad->y) - ball->y - pad->height/2;
+         flag_y = 10;
+     }
 
-         // check y: middle of block
-         else if (ball->y >= pad->y - pad->height/2&&
-                 ball->y <= pad->y + pad->height/2) {
-             dist_y = 0;
-             flag_y = 20;
-         }
+     // check y: middle of block
+     else if (ball->y >= pad->y - pad->height/2&&
+         ball->y <= pad->y + pad->height/2) {
+         dist_y = 0;
+         flag_y = 20;
+     }
 
-         // check y: after block
-         else if (ball->y > pad->y + pad->height/2) {
-             dist_y = ball->y - (pad->y + pad->height/2);
-             flag_y = 30;
-         }
-    float width_dist = dist_x*dist_x +dist_y*dist_y;
-    int flag=flag_x+flag_y;
+     // check y: after block
+     else if (ball->y > pad->y + pad->height/2) {
+    	 dist_y = ball->y - (pad->y + pad->height/2);
+         flag_y = 30;
+
+     }
+    float width_dist = dist_x*dist_x + dist_y*dist_y;
+    int flag = flag_x + flag_y;
+
     if (width_dist <= (float)(ball->radius * ball->radius)){
         if (ball->x + ball->radius >= 800 || flag == 23) {
             ball->angle = 180 - ball->angle;
@@ -112,66 +118,76 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
         if (flag == 33) {
             ball->angle = 45;
         }
+
         draw_paddle_image(pad);
     }
 
 }
 void game_run() {
-	int physicalWidth = 800;
-	int physicalHeight = 600;
-	int virtualWidth = 800;
-	int virtualHeight = 600;
+	int physical_width = 1024;
+	int physical_height = 768;
+	int virtual_width = 1024;
+	int virtual_height = 768;
+
 	// Background
-	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
-	setBGcolor(physicalWidth, physicalHeight, 0); // set BG to white
+	// Set background color
+	setBGcolor(physical_width, physical_height, 0x00ffffff); // set BG to white
+	// Init framebuffer
+	framebf_init(physical_width, physical_height, virtual_width, virtual_height);
+	// Set background color
+	setBGcolor(physical_width, physical_height, 0x00); // set BG to white
 
-	// Bricks
+	// Lay out bricks
+	int block_layout[][2] = {0}; // positions of top left point of bricks
 
-	int block_layout[][2] = {0};
-	draw_map(block_layout);
+	// Initialize state
+	stage cur_stage = MENU;
+	stage option = GAME;
+	int mode = 0, diff = 0;
 
 	// Balls
-	draw_ball(&newBall); // ball 1
-//    draw_ball(&newBall2); // ball 2
-    //paddles
-    draw_paddle_image(&leftPaddle);
-    draw_paddle_image(&rightPaddle);
+//	draw_ball(&new_ball); // ball 1
+    //	draw_ball(&new_ball2); // ball 2
+
+	//Paddles
+//    draw_paddle(&left_paddle);
+//    draw_paddle(&right_paddle);
+
 	while(1) {
-	    input=getUart();
-	    if(input!='\0' && countLoopA==0){
-            if (input=='w'|| input=='s'){
-	            move_paddle(&leftPaddle,input);
-                keyDownA=input;
-            }
-	    }
-	    if(input!='\0' && countLoopB==0){
-             if(input=='i'|| input=='k'){
-                move_paddle(&rightPaddle,input);
-                keyDownB=input;
-            }
-	    }
-        if(keyDownA!=0){
-            countLoopA++;
-            if (countLoopA==20){
-                countLoopA=0;
-                keyDownA=0;
-            }
-        }
-        if(keyDownB!=0){
-             countLoopB++;
-             if (countLoopB==20){
-                 countLoopB=0;
-                 keyDownB=0;
-             }
-         }
-        draw_paddle_image(&leftPaddle);        draw_paddle_image(&rightPaddle);
-        check_collision_paddle(&newBall, &leftPaddle);
-        check_collision_paddle(&newBall, &rightPaddle);
-		move_ball(&newBall, block_layout);
-//        check_collision_paddle(&newBall2, &leftPaddle);
-//        check_collision_paddle(&newBall2, &rightPaddle);
-//		move_ball(&newBall2,block_layout);
-		wait_msec(2000);
+		switch(cur_stage) {
+			case MENU: {
+				menu_stage(&option, &cur_stage);
+				break;
+			}
+			case SETTING: {
+				setting_stage(&cur_stage);
+				break;
+			}
+			case GAME: {
+				game_stage(&cur_stage, block_layout);
+				break;
+			}
+			case PLAYER: {
+				player_stage(&mode, &cur_stage);
+				break;
+			}
+			case DIFF: {
+				diff_stage(&diff, &cur_stage);
+				break;
+			}
+			case HOWTO: {
+				howto_stage(&cur_stage);
+				break;
+			}
+			case RESULT:{
+				result_stage(&option, &cur_stage, 10, 5);
+				break;
+			}
+			case PAUSE: {
+				pause_stage(&option, &cur_stage);
+				break;
+			}
+		}
 	}
 }
 
