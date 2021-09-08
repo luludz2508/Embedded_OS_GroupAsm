@@ -22,7 +22,7 @@ float sinx(float x, int n)
 
 void draw_ball(struct Ball *self){
 	float radian = self->angle*PI/180;
-	int r = self->radius;
+	int r = self->radius + 1;
     float ball_x= self -> x;
     float ball_y= self -> y;
 
@@ -36,7 +36,7 @@ void draw_ball(struct Ball *self){
 //	 mark center of ball in blue
 	for(int y = -r; y <= r; y++)
 		for(int x = -r; x <= r; x++)
-			if(x*x + y*y <= r*r)
+			if(x*x + y*y <= r*r && ballImage[(y + r - 1)*(2*r - 1) + x + r - 1]!=0x00ffffff)
 				drawPixelARGB32((int)(x + self->x), (int)(y + self->y), ballImage[(y + r - 1)*(2*r - 1) + x + r - 1]);
 
 	for (int y = -3; y < 4; y++){

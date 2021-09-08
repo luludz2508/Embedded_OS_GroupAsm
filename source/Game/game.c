@@ -5,8 +5,8 @@
 #include "../uart.h"
 #include "block.h"
 
-struct Ball newBall = {50, 250, 13, 2, 0};
-//	struct Ball newBall2 = {400, 300, 13, 25, 25, 10, 10};
+struct Ball newBall = {100, 250, 8, 1 , 22};
+struct Ball newBall2 = {100, 250, 10, 1 , 145};
 
 struct Paddle leftPaddle = {'A',20, 45, 20, 90, 50};
 struct Paddle rightPaddle = {'B',780, 45, 20, 90, 50};
@@ -28,7 +28,7 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
-void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
+void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
     float dist_x= ball->x - pad->x - pad->width/2;
     float dist_y= ball->y - pad->y - pad->height/2;
     int flag_x=0, flag_y=0;
@@ -121,11 +121,9 @@ void game_run() {
 	int physicalHeight = 600;
 	int virtualWidth = 800;
 	int virtualHeight = 600;
-		setBGcolor(physicalWidth, physicalHeight, 0x00ffffff); // set BG to white
-
 	// Background
 	framebf_init(physicalWidth, physicalHeight, virtualWidth, virtualHeight);
-	setBGcolor(physicalWidth, physicalHeight, 0x00); // set BG to white
+	setBGcolor(physicalWidth, physicalHeight, 0); // set BG to white
 
 	// Bricks
 
@@ -134,10 +132,10 @@ void game_run() {
 
 	// Balls
 	draw_ball(&newBall); // ball 1
-    //	draw_ball(&newBall2); // ball 2
+//    draw_ball(&newBall2); // ball 2
     //paddles
-    draw_paddle(&leftPaddle);
-    draw_paddle(&rightPaddle);
+    draw_paddle_image(&leftPaddle);
+    draw_paddle_image(&rightPaddle);
 	while(1) {
 	    input=getUart();
 	    if(input!='\0' && countLoopA==0){
@@ -166,12 +164,14 @@ void game_run() {
                  keyDownB=0;
              }
          }
-
-        check_collision_paddle1(&newBall, &leftPaddle);
-        check_collision_paddle1(&newBall, &rightPaddle);
+        draw_paddle_image(&leftPaddle);        draw_paddle_image(&rightPaddle);
+        check_collision_paddle(&newBall, &leftPaddle);
+        check_collision_paddle(&newBall, &rightPaddle);
 		move_ball(&newBall, block_layout);
-//		move_ball(&newBall2);
-		wait_msec(5000);
+//        check_collision_paddle(&newBall2, &leftPaddle);
+//        check_collision_paddle(&newBall2, &rightPaddle);
+//		move_ball(&newBall2,block_layout);
+		wait_msec(2000);
 	}
 }
 
