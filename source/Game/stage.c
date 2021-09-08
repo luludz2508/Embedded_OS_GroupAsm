@@ -5,11 +5,11 @@
 #include "block.h"
 #include "paddle.h"
 
-struct Ball new_ball = {50, 250, 13, 2, 0};
+struct Ball new_ball = {50, 250, 9, 1, 135};
 //	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
 
-struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
-struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
+struct Paddle left_paddle = {'A', 20, 45, 20, 90, 40};
+struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 40};
 
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
@@ -241,7 +241,7 @@ void game_stage(stage *main, int block_layout[][2]) {
 		}
 //		move_ball(&new_ball, block_layout);
 
-		wait_msec(5000);
+		wait_msec(2000);
 	}
 }
 
