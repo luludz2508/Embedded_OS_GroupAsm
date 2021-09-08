@@ -7,7 +7,7 @@
 
 struct Ball new_ball = {50, 250, 9, 1, 135};
 //	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
-
+ 
 struct Paddle left_paddle = {'A', 20, 45, 20, 90, 40};
 struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 40};
 
