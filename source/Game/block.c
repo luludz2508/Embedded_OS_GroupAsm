@@ -27,6 +27,14 @@ void remove_block(struct Block *self) {
 	uart_puts("remove block");
 }
 
+// Init block layout
+void init_blocks(int block_layout[][2]) {
+	for (int i = 0; i < max_blocks; i++){
+		block_layout[i][0] = 0;
+		block_layout[i][1] = 0;
+	}
+}
+
 // Draw map
 void draw_map(int block_layout[][2]) {
 
@@ -37,16 +45,27 @@ void draw_map(int block_layout[][2]) {
 	for (int i = 100; i <= 690; i+=83) {
 		// x-axis
 		for (int j = 408; j <= 573; j+=23) {
-			block.x = j;
-			block.y = i;
-			block.width = brick_width;
-			block.height = brick_height;
+						uart_puts("block layout[0]=");
+						uart_dec(block_layout[layout_index][0]);
+						uart_puts(",	block layout[1]=");
+						uart_dec(block_layout[layout_index][1]);
+						uart_puts(",	layout index=");
+						uart_dec(layout_index);
+						uart_puts("\n");
 
-			block_layout[layout_index][0] = j;
-			block_layout[layout_index][1] = i;
+			if (block_layout[layout_index][0] > -1) {
+				block.x = j;
+				block.y = i;
+				block.width = brick_width;
+				block.height = brick_height;
+
+				block_layout[layout_index][0] = j;
+				block_layout[layout_index][1] = i;
+
+				draw_block(&block);
+			}
+
 			layout_index++;
-
-			draw_block(&block);
 		}
 	}
 }
@@ -128,21 +147,21 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 			float distance_squared = (float)(dist_x*dist_x + dist_y*dist_y);
 
 			if (distance_squared <= (float)(radius*radius)) {
-				uart_puts("i =");
-															uart_dec(i);
-				uart_puts(", r =");
-											uart_dec(radius);
-				uart_puts(" ball_x = ");
-							uart_dec(ball_x);
-							uart_puts(", brick_x = ");
-							uart_dec(block_layout[i][0]);
-							uart_puts(" - ball_y = ");
-							uart_dec(ball_y);
-							uart_puts(", brick_y = ");
-							uart_dec(block_layout[i][1]);
-							uart_puts(" flag = ");
-								uart_dec(flag_x+flag_y);
-							uart_puts("\n");
+//				uart_puts("i =");
+//															uart_dec(i);
+//				uart_puts(", r =");
+//											uart_dec(radius);
+//				uart_puts(" ball_x = ");
+//							uart_dec(ball_x);
+//							uart_puts(", brick_x = ");
+//							uart_dec(block_layout[i][0]);
+//							uart_puts(" - ball_y = ");
+//							uart_dec(ball_y);
+//							uart_puts(", brick_y = ");
+//							uart_dec(block_layout[i][1]);
+//							uart_puts(" flag = ");
+//								uart_dec(flag_x+flag_y);
+//							uart_puts("\n");
 
 				// Create struct block to remove on screen
 				block.x = block_layout[i][0];
