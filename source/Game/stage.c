@@ -7,7 +7,7 @@
 
 int block_layout[64][2] = {{0}};
 
-struct Ball new_ball = {50, 250, 9, 1, 135};
+struct Ball new_ball = {50, 250, 9, 1, 20};
  
 struct Paddle left_paddle = {'A', 20, 45, 20, 90, 40};
 struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 40};
