@@ -129,7 +129,7 @@ void game_run() {
 	setBGcolor(physical_width, physical_height, 0x00); // set BG to white
 
 	// Lay out bricks
-	int block_layout[][2] = {0}; // positions of top left point of bricks
+//	int block_layout[][2] = {0}; // positions of top left point of bricks
 
 	// Initialize state
 	stage cur_stage = MENU;
@@ -155,7 +155,7 @@ void game_run() {
 				break;
 			}
 			case GAME: {
-				game_stage(&cur_stage, block_layout);
+				game_stage(&cur_stage);
 				break;
 			}
 			case PLAYER: {

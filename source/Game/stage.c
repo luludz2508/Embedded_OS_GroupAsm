@@ -5,8 +5,9 @@
 #include "block.h"
 #include "paddle.h"
 
+int block_layout[64][2] = {{0}};
+
 struct Ball new_ball = {50, 250, 9, 1, 135};
-//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 10, 10};
  
 struct Paddle left_paddle = {'A', 20, 45, 20, 90, 40};
 struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 40};
@@ -19,6 +20,8 @@ void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
 	int redraw = 1;
+	init_blocks(block_layout); // reset block layout
+
 	while(1){
 		char key = uart_getc();
 		if(key == 'w' && *option == SETTING){
@@ -153,17 +156,17 @@ void howto_stage(stage *main) {
 
 void count_down(int layout[][2]) {
 	for(int c = 0; c < 3; c++) {
-		draw_map(layout);
+//		draw_map(layout);
 		drawChar_upper(380, 170, 0x00FFFF00, c);
 		wait_msec(10000);
 		setBGcolor(1024,768,0x0);
 	}
-	draw_map(layout);
+//	draw_map(layout);
 }
 
-void game_stage(stage *main, int block_layout[][2]) {
+void game_stage(stage *main) {
 
-	count_down(block_layout);
+//	count_down(block_layout);
 //	struct Ball new_ball = {50, 50, 13, 25, 25, 0.5, 70};
 //	struct Ball new_ball2 = {400, 300, 13, 25, 25, 2, 10};
 //	struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
@@ -255,6 +258,8 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 	draw_button(300,RESTART);
 	draw_button(500,HOME);
 	int redraw = 1;
+	init_blocks(block_layout); // reset block layout
+
 	while(1) {
 		char key = uart_getc();
 		if(key == 'w' && *option == MENU){
