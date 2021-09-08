@@ -21,12 +21,13 @@ void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
 	int redraw = 1;
+	init_blocks(block_layout); // reset block layout
+
 	while(1){
 		char key = uart_getc();
 		if(key == 'w' && *option == SETTING){
 			*option = GAME;
 			redraw = 1;
-//			init_blocks(block_layout);
 		} else if(key == 's' && *option == GAME) {
 			redraw = 1;
 			*option = SETTING;
