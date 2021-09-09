@@ -86,7 +86,7 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
             uart_dec((int)( ball->angle));
         }
 
-        // ball hit left wall
+        // ball hit left side of paddle
         if ( flag == 21) {
             ball->x = pad->x -pad->width/2-ball->radius;
             if (ball->angle<=180)
@@ -99,12 +99,12 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
         }
 
         // ball hit bottom
-        if (ball->y + ball->radius >= 768 || flag == 32) {
+        if (flag == 32) {
             ball->angle = 360 - ball->angle;
         }
 
         // ball hit top
-        if (ball->y - ball->radius <= 0 || flag == 12) {
+        if (flag == 12) {
             ball->angle = 360 - ball->angle;
         }
 

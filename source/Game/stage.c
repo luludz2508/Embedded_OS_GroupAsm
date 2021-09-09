@@ -241,12 +241,12 @@ void game_stage(stage *main) {
         draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
-//		// if ball hits walls
-//		if (!move_ball(&new_ball, block_layout)) {
-//			*main = RESULT;
-//			setBGcolor(1024,768,0x0);
-//			return;
-//		}
+		// if ball hits walls
+		if (!move_ball(&new_ball, block_layout)) {
+			*main = RESULT;
+			setBGcolor(1024,768,0x0);
+			return;
+		}
 		move_ball(&new_ball, block_layout);
 
 		wait_msec(2000);
