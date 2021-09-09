@@ -9,7 +9,6 @@ void draw_paddle_image(struct Paddle *self){
 	int half_width = self->width/2;
 	int half_height = self->height/2;
 
-//	 mark center of paddle in blue
 	for(int y = -half_height; y <= half_height; y++)
 		for(int x = -half_width; x <= half_width; x++)
 		    if (self->name=='A'){

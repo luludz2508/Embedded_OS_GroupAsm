@@ -4,6 +4,7 @@
 #include "../framebf.h"
 #include "block.h"
 #include "paddle.h"
+#include "background.h"
 
 int block_layout[64][2] = {{0}};
 
@@ -175,7 +176,9 @@ void game_stage(stage *main) {
 //	char input, key_down_A, key_down_B;
 //	int count_loop_A = 0;
 //	int count_loop_B = 0;
-
+    for ( int y = 0 ; y < 768 ; y++)
+        for ( int x = 0 ; x < 1024 ; x++ )
+               drawPixelARGB32(x, y, background_img[y*1024+x]);
 	// Draw map
 	draw_map(block_layout);
 
@@ -211,7 +214,7 @@ void game_stage(stage *main) {
 		if(key_down_A != 0){
 			count_loop_A++;
 			// Delay button press
-			if (count_loop_A == 20){
+			if (count_loop_A == 10){
 				count_loop_A = 0;
 				key_down_A =0;
 			}
@@ -221,7 +224,7 @@ void game_stage(stage *main) {
 		if(key_down_B != 0){
 			 count_loop_B++;
 			 // Delay button press
-			 if (count_loop_B == 20){
+			 if (count_loop_B == 10){
 				 count_loop_B = 0;
 				 key_down_B = 0;
 			 }
@@ -233,8 +236,8 @@ void game_stage(stage *main) {
 			return;
 		}
 
-		check_collision_paddle1(&new_ball, &left_paddle);
-		check_collision_paddle1(&new_ball, &right_paddle);
+		check_collision_paddle(&new_ball, &left_paddle);
+		check_collision_paddle(&new_ball, &right_paddle);
 
 		// if ball hits walls
 		if (!move_ball(&new_ball, block_layout)) {

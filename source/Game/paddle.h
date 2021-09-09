@@ -12,5 +12,3 @@ void draw_paddle_image(struct Paddle *self);
 void draw_paddle(struct Paddle *self);
 
 void move_paddle(struct Paddle *self, char key);
-
-//void check_collision_paddle1(struct Ball *ball, struct Paddle *pad);

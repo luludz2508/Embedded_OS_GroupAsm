@@ -5,6 +5,7 @@
 #include "../uart.h"
 #include "stage.h"
 #include "block.h"
+#include "background.h"
 
 
 void wait_msec(unsigned int n)
@@ -21,7 +22,7 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
-void check_collision_paddle1(struct Ball *ball, struct Paddle *pad){
+void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
     float dist_x = ball->x - pad->x - pad->width/2;
     float dist_y = ball->y - pad->y - pad->height/2;
     int flag_x = 0, flag_y = 0;
@@ -123,6 +124,9 @@ void game_run() {
 	// Background
 	// Set background color
 	setBGcolor(physical_width, physical_height, 0x00ffffff); // set BG to white
+
+
+
 	// Init framebuffer
 	framebf_init(physical_width, physical_height, virtual_width, virtual_height);
 	// Set background color

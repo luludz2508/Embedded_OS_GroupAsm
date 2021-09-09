@@ -3,6 +3,7 @@
 #include "../framebf.h"
 #include "ball_image.h"
 #include "block.h"
+#include "background.h"
 
 const float PI=3.14159;
 
@@ -28,7 +29,9 @@ void draw_ball(struct Ball *self){
 	for(int y = -r; y <= r; y++)
 		for(int x = -r; x <= r; x++)
 			if(x*x + y*y <= r*r)
-				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), 0x0);
+//				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), 0x0);
+				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), background_img[(int)(y + ball_y)*1024+(int)(x + ball_x)]);
+
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
 	self->y+=(self->speed) * sinx(radian,20);
 
