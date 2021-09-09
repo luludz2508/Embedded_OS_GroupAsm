@@ -72,7 +72,7 @@ void draw_map(int block_layout[][2]) {
 	}
 }
 
-int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
+int check_collision_block(int ball_x, int ball_y, int radius, int block_layout[][2], int *streaks) {
 	// Collision with blocks
 	struct Block block = {0};
 
@@ -175,6 +175,13 @@ int check_collision(int ball_x, int ball_y, int radius, int block_layout[][2]) {
 				block_layout[i][1] = -1;
 				// Remove on screen
 				remove_block(&block);
+
+				// Increase streaks to calculate score
+				*streaks+=1;
+				uart_puts(" streaks = ");
+					uart_dec(*streaks);
+				uart_puts("\n");
+
 
 				return flag_x + flag_y;
 			}

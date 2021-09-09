@@ -22,7 +22,7 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
-void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
+void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks){
     float dist_x = ball->x - pad->x - pad->width/2;
     float dist_y = ball->y - pad->y - pad->height/2;
     int flag_x = 0, flag_y = 0;
@@ -84,6 +84,9 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
                 }
             uart_puts(" - Angle After: ");
             uart_dec((int)( ball->angle));
+
+            // score+1
+            pad->score += *streaks;
         }
 
         // ball hit left side of paddle
@@ -96,40 +99,71 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
 
             uart_puts(" - Angle After: ");
             uart_dec((int)( ball->angle));
+
+            // score+1
+            pad->score += *streaks;
         }
 
         // ball hit bottom
         if (flag == 32) {
             ball->angle = 360 - ball->angle;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         // ball hit top
         if (flag == 12) {
             ball->angle = 360 - ball->angle;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         if(ball->angle >= 360){
             ball->angle -= 360;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         // change angle if hit top left corner
         if (flag == 11) {
             ball->angle = 225;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         // change angle if hit bottom left corner
         if (flag == 31) {
             ball->angle = 135;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         // change angle if hit top right corner
         if (flag == 13) {
             ball->angle = 315;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
 
         // change angle if hit bottom right corner
         if (flag == 33) {
             ball->angle = 45;
+
+            // score+1
+            pad->score += *streaks;
+            *streaks = 0;
         }
         draw_paddle_image(pad);
     }

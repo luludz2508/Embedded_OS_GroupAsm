@@ -7,6 +7,13 @@
 
 const float PI=3.14159;
 
+void init_ball(struct Ball *self) {
+	self->x = 700;
+	self->y = 100;
+	self->speed = 0.5;
+	self->angle = 180;
+}
+
 float sinx(float x, int n)
 {
    float t = x;
@@ -48,11 +55,11 @@ void draw_ball(struct Ball *self){
 	}
 }
 
-int move_ball(struct Ball *self, int block_layout[][2]){
+int move_ball(struct Ball *self, int block_layout[][2], int *streaks){
 	draw_ball(self);
 
 	// Check collision
-	int flag = check_collision(self->x, self->y, self->radius, block_layout);
+	int flag = check_collision_block(self->x, self->y, self->radius, block_layout, streaks);
 
 	// ball hit right of block
 	if (flag == 23) {

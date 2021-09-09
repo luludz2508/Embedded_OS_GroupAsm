@@ -6,16 +6,20 @@
 #include "paddle.h"
 #include "background.h"
 
+// [block index][0:x, 1:y]
 int block_layout[64][2] = {{0}};
 
+// Ball: x, y, radius, speed, angle
 struct Ball new_ball = {700, 100, 9, 0.5, 180};
  
-struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25};
-struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 25};
+// player name, x, y, width, height, speed, score
+struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25, 0};
+struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 25, 0};
 
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
 int count_loop_B = 0;
+int streaks = 0; // increase streaks when ball hits many blocks in a row
 
 void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
@@ -26,12 +30,26 @@ void menu_stage(stage *option, stage *main) {
 	while(1){
 		char key = uart_getc();
 		if(key == 'w' && *option == SETTING){
+			// Reset ball
+			init_ball(&new_ball);
+			// Reset paddles
+			init_paddles(&left_paddle, &right_paddle);
+			// Reset streaks count
+			streaks = 0;
+
 			*option = GAME;
 			redraw = 1;
 		} else if(key == 's' && *option == GAME) {
 			redraw = 1;
 			*option = SETTING;
 		} else if(key == '\n'){
+			// Reset ball
+			init_ball(&new_ball);
+			// Reset paddles
+			init_paddles(&left_paddle, &right_paddle);
+			// Reset streaks count
+			streaks = 0;
+
 			*main = *option;
 			setBGcolor(1024,768,0x0);
 			return;
@@ -242,12 +260,12 @@ void game_stage(stage *main) {
         draw_paddle_image(&right_paddle);
 
 		// if ball hits walls
-		if (!move_ball(&new_ball, block_layout)) {
+		if (!move_ball(&new_ball, block_layout, &streaks)) {
 			*main = RESULT;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		move_ball(&new_ball, block_layout);
+		move_ball(&new_ball, block_layout, &streaks);
 
 		wait_msec(2000);
 	}
@@ -268,12 +286,26 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 	while(1) {
 		char key = uart_getc();
 		if(key == 'w' && *option == MENU){
+			// Reset ball
+			init_ball(&new_ball);
+			// Reset paddles
+			init_paddles(&left_paddle, &right_paddle);
+			// Reset streaks count
+			streaks = 0;
+
 			redraw = 1;
 			*option = GAME;
 		}else if(key == 's' && *option == GAME){
 			redraw = 1;
 			*option = MENU;
 		}else if(key == '\n'){
+			// Reset ball
+			init_ball(&new_ball);
+			// Reset paddles
+			init_paddles(&left_paddle, &right_paddle);
+			// Reset streaks count
+			streaks = 0;
+
 			*main = *option;
 			*option = GAME;
 			setBGcolor(1024,768,0x0);

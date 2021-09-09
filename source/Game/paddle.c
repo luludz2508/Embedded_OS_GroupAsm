@@ -52,3 +52,17 @@ void move_paddle(struct Paddle *self, char key){
 	draw_paddle(self);
 }
 
+void init_paddles(struct Paddle *p1, struct Paddle *p2) {
+	// Paddle 1
+	p1->x = 20;
+	p1->y = 45;
+	p1->speed = 25;
+	p1->score = 0;
+
+	// Paddle 2
+	p2->x = 1004;
+	p2->y = 45;
+	p2->speed = 25;
+	p2->score = 0;
+}
+
