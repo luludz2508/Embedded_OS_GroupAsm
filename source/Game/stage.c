@@ -8,10 +8,10 @@
 
 int block_layout[64][2] = {{0}};
 
-struct Ball new_ball = {50, 250, 9, 1, 20};
+struct Ball new_ball = {700, 100, 9, 0.5, 180};
  
-struct Paddle left_paddle = {'A', 20, 45, 20, 90, 40};
-struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 40};
+struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25};
+struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 25};
 
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
@@ -238,14 +238,16 @@ void game_stage(stage *main) {
 
 		check_collision_paddle(&new_ball, &left_paddle);
 		check_collision_paddle(&new_ball, &right_paddle);
+        draw_paddle_image(&left_paddle);
+        draw_paddle_image(&right_paddle);
 
-		// if ball hits walls
-		if (!move_ball(&new_ball, block_layout)) {
-			*main = RESULT;
-			setBGcolor(1024,768,0x0);
-			return;
-		}
-//		move_ball(&new_ball, block_layout);
+//		// if ball hits walls
+//		if (!move_ball(&new_ball, block_layout)) {
+//			*main = RESULT;
+//			setBGcolor(1024,768,0x0);
+//			return;
+//		}
+		move_ball(&new_ball, block_layout);
 
 		wait_msec(2000);
 	}
