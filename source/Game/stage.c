@@ -9,8 +9,8 @@
 // [block index][0:x, 1:y]
 int block_layout[64][2] = {{0}};
 
-// Ball: x, y, radius, speed, angle
-struct Ball new_ball = {700, 100, 9, 0.5, 180};
+// Ball: x, y, radius, speed, angle, current player
+struct Ball new_ball = {700, 100, 9, 0.5, 180, 'B'};
  
 // player name, x, y, width, height, speed, score
 struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25, 0};
@@ -194,10 +194,11 @@ void game_stage(stage *main) {
 //	char input, key_down_A, key_down_B;
 //	int count_loop_A = 0;
 //	int count_loop_B = 0;
-    for ( int y = 0 ; y < 768 ; y++)
-        for ( int x = 0 ; x < 1024 ; x++ )
+    for (int y = 0 ; y < 768 ; y++)
+        for (int x = 0 ; x < 1024 ; x++ )
                drawPixelARGB32(x, y, background_img[y*1024+x]);
-	// Draw map
+
+    // Draw map
 	draw_map(block_layout);
 
 	// Balls
@@ -255,14 +256,14 @@ void game_stage(stage *main) {
 		}
 
 		// Check collision for 2 paddles
-		check_collision_paddle(&new_ball, &left_paddle);
-		check_collision_paddle(&new_ball, &right_paddle);
+		check_collision_paddle(&new_ball, &left_paddle, &streaks);
+		check_collision_paddle(&new_ball, &right_paddle, &streaks);
 		// Draw 2 paddles
 		draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
 		// if ball hits walls => lose
-		if (!check_collision_block(&new_ball, block_layout, &streaks)) {
+		if (!check_collision_block(&new_ball, block_layout, &left_paddle, &right_paddle, &streaks)) {
 			*main = RESULT;
 			setBGcolor(1024,768,0x0);
 			return;

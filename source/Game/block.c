@@ -56,13 +56,13 @@ void draw_map(int block_layout[][2]) {
 	for (int i = 100; i <= 690; i+=83) {
 		// x-axis
 		for (int j = 408; j <= 573; j+=23) {
-						uart_puts("block layout[0]=");
-						uart_dec(block_layout[layout_index][0]);
-						uart_puts(",	block layout[1]=");
-						uart_dec(block_layout[layout_index][1]);
-						uart_puts(",	layout index=");
-						uart_dec(layout_index);
-						uart_puts("\n");
+//						uart_puts("block layout[0]=");
+//						uart_dec(block_layout[layout_index][0]);
+//						uart_puts(",	block layout[1]=");
+//						uart_dec(block_layout[layout_index][1]);
+//						uart_puts(",	layout index=");
+//						uart_dec(layout_index);
+//						uart_puts("\n");
 
 			if (block_layout[layout_index][0] > -1) {
 				block.x = j;

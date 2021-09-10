@@ -83,6 +83,12 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks)
         int modify_angle=50;
         uart_puts("\nAngle Before: ");
         uart_dec((int)( ball->angle));
+
+        // Change current player when ball hit paddle
+        ball->current_player = pad->name;
+        // Reset streaks
+        *streaks = 0;
+
         // ball hit right side of paddle
         if ( flag == 23) {
             ball->x = pad->x + pad->width/2 + ball->radius;
@@ -94,9 +100,6 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks)
                 }
             uart_puts(" - Angle After: ");
             uart_dec((int)( ball->angle));
-
-            // score+1
-            pad->score += *streaks;
         }
 
         // ball hit left side of paddle
@@ -109,78 +112,47 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks)
 
             uart_puts(" - Angle After: ");
             uart_dec((int)( ball->angle));
-
-            // score+1
-            pad->score += *streaks;
         }
 
         // ball hit bottom
         if (flag == 32) {
             ball->angle = 360 - ball->angle;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         // ball hit top
         if (flag == 12) {
             ball->angle = 360 - ball->angle;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         if(ball->angle >= 360){
             ball->angle -= 360;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         // change angle if hit top left corner
         if (flag == 11) {
             ball->angle = 225;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         // change angle if hit bottom left corner
         if (flag == 31) {
             ball->angle = 135;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         // change angle if hit top right corner
         if (flag == 13) {
             ball->angle = 315;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
 
         // change angle if hit bottom right corner
         if (flag == 33) {
             ball->angle = 45;
-
-            // score+1
-            pad->score += *streaks;
-            *streaks = 0;
         }
         draw_paddle_image(pad);
     }
 
 }
 
-int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks) {
+int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddle *padA, struct Paddle *padB, int *streaks) {
 	// Ball x and y
 	int ball_x = ball->x;
 	int ball_y = ball->y;
@@ -210,16 +182,6 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks
 
 	for (int i = 0; i < MAX_BLOCKS; i++) {
 		if (block_layout[i][0] > -1 && block_layout[i][1] > -1) {
-			// check x: ball hit left wall of block
-//			uart_dec(ball_x);
-//			uart_puts("				");
-//			uart_dec(block_layout[i][0]);
-//			uart_puts("					");
-//			uart_dec(ball_y);
-//			uart_puts("				");
-//			uart_dec(block_layout[i][1]);
-//			uart_puts("\n");
-
 			// check x: ball hit left of block
 			if (ball_x < block_layout[i][0]) {
 				dist_x = (block_layout[i][0]) - ball_x;
@@ -263,22 +225,6 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks
 			float distance_squared = (float)(dist_x*dist_x + dist_y*dist_y);
 
 			if (distance_squared <= (float)(radius*radius)) {
-//				uart_puts("i =");
-//															uart_dec(i);
-//				uart_puts(", r =");
-//											uart_dec(radius);
-//				uart_puts(" ball_x = ");
-//							uart_dec(ball_x);
-//							uart_puts(", brick_x = ");
-//							uart_dec(block_layout[i][0]);
-//							uart_puts(" - ball_y = ");
-//							uart_dec(ball_y);
-//							uart_puts(", brick_y = ");
-//							uart_dec(block_layout[i][1]);
-//							uart_puts(" flag = ");
-//								uart_dec(flag_x+flag_y);
-//							uart_puts("\n");
-
 				// Create struct block to remove on screen
 				block.x = block_layout[i][0];
 				block.y = block_layout[i][1];
@@ -290,12 +236,8 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks
 				// Remove on screen
 				remove_block(&block);
 
-				// Increase streaks to calculate score
-				*streaks+=1;
-				uart_puts(" streaks = ");
-					uart_dec(*streaks);
-				uart_puts("\n");
-
+				// Scoring
+				score(padA, padB, ball->current_player, streaks);
 
 				flag = flag_x + flag_y;
 			}
@@ -316,15 +258,37 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks
 	// ball hit right wall => lose
 	if (ball->x + ball->radius >= 1024) {
 		ball->angle = 180 - ball->angle;
-		uart_puts("you lose\n");
-		return 0;
+
+		if (ball->current_player == 'A') {
+			uart_puts("player A lose points\n");
+			padA->score-=5;
+			if (padA->score < 0)
+				return 0;
+		}
+		else {
+			uart_puts("player B lose points\n");
+			padB->score-=5;
+			if (padB->score < 0)
+				return 0;
+		}
 	}
 
 	// ball hit left wall => lose
 	if (ball->x - ball->radius <= 0) {
 		ball->angle = 180 - ball->angle;
-		uart_puts("you lose\n");
-		return 0;
+
+		if (ball->current_player == 'A') {
+			uart_puts("player A lose points\n");
+			padA->score-=5;
+			if (padA->score < 0)
+				return 0;
+		}
+		else {
+			uart_puts("player B lose points\n");
+			padB->score-=5;
+			if (padB->score < 0)
+				return 0;
+		}
 	}
 
 	// ball hit bottom
@@ -364,6 +328,27 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks
 	draw_ball(ball);
 
 	return 1;
+}
+
+void score(struct Paddle *padA, struct Paddle *padB, char pad_name, int *streaks) {
+	// Increase streaks to calculate score
+	*streaks+=1;
+
+	if (pad_name == 'A')
+		padA->score+=*streaks;
+	else
+		padB->score+=*streaks;
+
+
+	uart_puts("\nstreaks=");
+		uart_dec(*streaks);
+	uart_puts(", currentplayer=");
+		uart_sendc(pad_name);
+		uart_puts(", padA_score=");
+			uart_dec(padA->score);
+	uart_puts(", padB_score=");
+				uart_dec(padB->score);
+	uart_puts("\n");
 }
 
 void game_run() {

@@ -5,6 +5,7 @@ struct Ball {
 	int radius;
 	float speed;
 	float angle;
+    char current_player;
 };
 
 void draw_ball(struct Ball *self);

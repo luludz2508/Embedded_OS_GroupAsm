@@ -12,6 +12,7 @@ void init_ball(struct Ball *self) {
 	self->y = 100;
 	self->speed = 0.5;
 	self->angle = 180;
+	self->current_player = 'B';
 }
 
 float sinx(float x, int n)
