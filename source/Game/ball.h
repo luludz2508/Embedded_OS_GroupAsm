@@ -1,5 +1,4 @@
-
-// struct Ball ;
+// struct Ball
 struct Ball {
 	float x;
 	float y;
@@ -7,6 +6,7 @@ struct Ball {
 	float speed;
 	float angle;
 };
+
 void draw_ball(struct Ball *self);
-int move_ball(struct Ball *self, int block_layout[][2], int *streaks);
+int move_ball(struct Ball *self);
 void init_ball(struct Ball *self);

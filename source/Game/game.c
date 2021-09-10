@@ -7,6 +7,15 @@
 #include "block.h"
 #include "background.h"
 
+#ifndef BRICK_WIDTH
+#define BRICK_WIDTH 23
+#endif
+#ifndef BRICK_HEIGHT
+#define BRICK_HEIGHT 83
+#endif
+#ifndef MAX_BLOCKS
+#define MAX_BLOCKS 64
+#endif
 
 void wait_msec(unsigned int n)
 {
@@ -22,6 +31,7 @@ void wait_msec(unsigned int n)
     } while(r < t);
 
 }
+
 void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks){
     float dist_x = ball->x - pad->x - pad->width/2;
     float dist_y = ball->y - pad->y - pad->height/2;
@@ -169,6 +179,193 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad, int *streaks)
     }
 
 }
+
+int check_collision_block(struct Ball *ball, int block_layout[][2], int *streaks) {
+	// Ball x and y
+	int ball_x = ball->x;
+	int ball_y = ball->y;
+	int radius = ball->radius;
+
+	// Collision with blocks
+	struct Block block = {0};
+
+	/*
+	X < Xa -> dist(X) = Xa - X
+	Xa < x < Xb -> dist(X) = 0
+	X > Xb -> dist(X) = X - Xb
+
+	Y < Ya -> dist(Y) = Ya - Y
+	Ya < Y < Yd -> dist(Y) = 0
+	Y > Yd -> dist(Y) = Y - Yd
+
+	dist = sqrt(dist(X)^2 + dist(Y)^2) > R => collide
+	 */
+
+	int dist_x = 0;
+	int dist_y = 0;
+
+	int flag_x = 0;
+	int flag_y = 0;
+	int flag = 0;
+
+	for (int i = 0; i < MAX_BLOCKS; i++) {
+		if (block_layout[i][0] > -1 && block_layout[i][1] > -1) {
+			// check x: ball hit left wall of block
+//			uart_dec(ball_x);
+//			uart_puts("				");
+//			uart_dec(block_layout[i][0]);
+//			uart_puts("					");
+//			uart_dec(ball_y);
+//			uart_puts("				");
+//			uart_dec(block_layout[i][1]);
+//			uart_puts("\n");
+
+			// check x: ball hit left of block
+			if (ball_x < block_layout[i][0]) {
+				dist_x = (block_layout[i][0]) - ball_x;
+				flag_x = 1;
+			}
+
+			// check x: ball hit top or bottom of block
+			else if (ball_x >= block_layout[i][0] &&
+					 ball_x <= block_layout[i][0] + BRICK_WIDTH) {
+				dist_x = 0;
+				flag_x = 2;
+			}
+
+			// check x: ball hit right wall of block
+			else if (ball_x > block_layout[i][0] + BRICK_WIDTH) {
+				dist_x = ball_x - (block_layout[i][0] + BRICK_WIDTH);
+				flag_x = 3;
+			}
+
+			// check y: before block
+			if (ball_y < block_layout[i][1]) {
+				dist_y = (block_layout[i][1]) - ball_y;
+				flag_y = 10;
+			}
+
+			// check y: middle of block
+			else if (ball_y >= block_layout[i][1] &&
+					ball_y <= block_layout[i][1] + BRICK_HEIGHT) {
+				dist_y = 0;
+				flag_y = 20;
+			}
+
+			// check y: after block
+			else if (ball_y > block_layout[i][1] + BRICK_HEIGHT) {
+//				uart_puts("\nline 155\n");
+				dist_y = ball_y - (block_layout[i][1] + BRICK_HEIGHT);
+				flag_y = 30;
+			}
+
+			// calculate distance
+			float distance_squared = (float)(dist_x*dist_x + dist_y*dist_y);
+
+			if (distance_squared <= (float)(radius*radius)) {
+//				uart_puts("i =");
+//															uart_dec(i);
+//				uart_puts(", r =");
+//											uart_dec(radius);
+//				uart_puts(" ball_x = ");
+//							uart_dec(ball_x);
+//							uart_puts(", brick_x = ");
+//							uart_dec(block_layout[i][0]);
+//							uart_puts(" - ball_y = ");
+//							uart_dec(ball_y);
+//							uart_puts(", brick_y = ");
+//							uart_dec(block_layout[i][1]);
+//							uart_puts(" flag = ");
+//								uart_dec(flag_x+flag_y);
+//							uart_puts("\n");
+
+				// Create struct block to remove on screen
+				block.x = block_layout[i][0];
+				block.y = block_layout[i][1];
+				block.width = BRICK_WIDTH;
+				block.height = BRICK_HEIGHT;
+				// Delete from block layout
+				block_layout[i][0] = -1;
+				block_layout[i][1] = -1;
+				// Remove on screen
+				remove_block(&block);
+
+				// Increase streaks to calculate score
+				*streaks+=1;
+				uart_puts(" streaks = ");
+					uart_dec(*streaks);
+				uart_puts("\n");
+
+
+				flag = flag_x + flag_y;
+			}
+		}
+	}
+
+	// Change ball angle
+	// ball hit right of block
+	if (flag == 23) {
+		ball->angle = 180 - ball->angle;
+	}
+
+	// ball hit left of block
+	if (flag == 21) {
+		ball->angle = 180 - ball->angle;
+	}
+
+	// ball hit right wall => lose
+	if (ball->x + ball->radius >= 1024) {
+		ball->angle = 180 - ball->angle;
+		uart_puts("you lose\n");
+		return 0;
+	}
+
+	// ball hit left wall => lose
+	if (ball->x - ball->radius <= 0) {
+		ball->angle = 180 - ball->angle;
+		uart_puts("you lose\n");
+		return 0;
+	}
+
+	// ball hit bottom
+	if (ball->y + ball->radius >= 768 || flag == 32) {
+		ball->angle = 360 - ball->angle;
+	}
+
+	// ball hit top
+	if (ball->y - ball->radius <= 0 || flag == 12) {
+		ball->angle = 360 - ball->angle;
+	}
+
+	if(ball->angle >= 360){
+		ball->angle -= 360;
+	}
+
+	// change angle if hit top left corner
+	if (flag == 11) {
+		ball->angle = 225;
+	}
+
+	// change angle if hit bottom left corner
+	if (flag == 31) {
+		ball->angle = 135;
+	}
+
+	// change angle if hit top right corner
+	if (flag == 13) {
+		ball->angle = 315;
+	}
+
+	// change angle if hit bottom right corner
+	if (flag == 33) {
+		ball->angle = 45;
+	}
+
+	draw_ball(ball);
+
+	return 1;
+}
+
 void game_run() {
 	int physical_width = 1024;
 	int physical_height = 768;

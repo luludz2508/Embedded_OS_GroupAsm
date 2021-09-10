@@ -254,18 +254,21 @@ void game_stage(stage *main) {
 			return;
 		}
 
+		// Check collision for 2 paddles
 		check_collision_paddle(&new_ball, &left_paddle);
 		check_collision_paddle(&new_ball, &right_paddle);
-        draw_paddle_image(&left_paddle);
+		// Draw 2 paddles
+		draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
-		// if ball hits walls
-		if (!move_ball(&new_ball, block_layout, &streaks)) {
+		// if ball hits walls => lose
+		if (!check_collision_block(&new_ball, block_layout, &streaks)) {
 			*main = RESULT;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		move_ball(&new_ball, block_layout, &streaks);
+		// Move ball
+		move_ball(&new_ball);
 
 		wait_msec(2000);
 	}
