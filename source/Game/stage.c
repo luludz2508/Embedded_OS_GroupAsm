@@ -10,7 +10,8 @@
 int block_layout[64][2] = {{0}};
 
 // Ball: x, y, radius, speed, angle, current player
-struct Ball new_ball = {700, 100, 9, 0.5, 180, 'B'};
+struct Ball ball1 = {100, 100, 9, 0.5, 180, 0, 'A'};
+struct Ball ball2 = {700, 100, 9, 0.5, 180, 0, 'B'};
  
 // player name, x, y, width, height, speed, score
 struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25, 0};
@@ -19,42 +20,33 @@ struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 25, 0};
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
 int count_loop_B = 0;
-int streaks = 0; // increase streaks when ball hits many blocks in a row
 
 void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
 	int redraw = 1;
-	init_blocks(block_layout); // reset block layout
 
 	while(1){
 		char key = uart_getc();
-		if(key == 'w' && *option == SETTING){
-			// Reset ball
-			init_ball(&new_ball);
-			// Reset paddles
-			init_paddles(&left_paddle, &right_paddle);
-			// Reset streaks count
-			streaks = 0;
-
+		if (key == 'w' && *option == SETTING) {
 			*option = GAME;
 			redraw = 1;
-		} else if(key == 's' && *option == GAME) {
+		} else if (key == 's' && *option == GAME) {
 			redraw = 1;
 			*option = SETTING;
-		} else if(key == '\n'){
+		} else if (key == '\n') {
+			// reset block layout
+			init_blocks(block_layout);
 			// Reset ball
-			init_ball(&new_ball);
+			init_ball(&ball1, &ball2);
 			// Reset paddles
 			init_paddles(&left_paddle, &right_paddle);
-			// Reset streaks count
-			streaks = 0;
-
 			*main = *option;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
 		if(redraw){
+			uart_puts("should draw\n");
 			if(*option == SETTING){
 				draw_arrow(114,100,1,1);
 				draw_arrow(114,300,0,1);
@@ -76,18 +68,19 @@ void setting_stage(stage *main) {
 	int redraw = 1;
 	int setting = 0;
 	int stage_idx[4] = {PLAYER,DIFF,HOWTO,MENU};
-	while(1){
+
+	while(1) {
 		char key = uart_getc();
-		if(key == 'w' && setting > 0){
+		if (key == 'w' && setting > 0) {
 			//erase option pointer
 			draw_arrow(135,setting*170+40,1,2);
 			setting-=1;
 			redraw = 1;
-		}else if(key == 's' && setting < 3){
+		} else if (key == 's' && setting < 3) {
 			draw_arrow(135,setting*170+40,1,2);
 			setting+=1;
 			redraw = 1;
-		}else if(key == '\n'){
+		} else if (key == '\n') {
 			*main = stage_idx[setting];
 			setBGcolor(1024,768,0x0);
 			return;
@@ -104,20 +97,20 @@ void player_stage(int *mode, stage *main) {
 	draw_button(100,ONE);
 	draw_button(300,MULTI);
 	int redraw = 1;
-	while(1){
+	while (1) {
 		char key = uart_getc();
-		if(key == 'w' && *mode == 1){
+		if (key == 'w' && *mode == 1) {
 			*mode = 0;
 			redraw = 1;
-		} else if(key == 's' && *mode == 0) {
+		} else if (key == 's' && *mode == 0) {
 			redraw = 1;
 			*mode = 1;
-		} else if(key == '\n'){
+		} else if (key == '\n') {
 			*main = SETTING;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		if(redraw){
+		if (redraw) {
 			if(*mode == 1){
 				draw_arrow(75,100,1,0);
 				draw_arrow(75,300,0,0);
@@ -134,20 +127,20 @@ void diff_stage(int *diff, stage *main) {
 	draw_button(100,EASY);
 	draw_button(300,HARD);
 	int redraw = 1;
-	while(1){
+	while (1) {
 		char key = uart_getc();
-		if(key == 'w' && *diff == 1){
+		if (key == 'w' && *diff == 1) {
 			*diff = 0;
 			redraw = 1;
-		} else if(key == 's' && *diff == 0) {
+		} else if (key == 's' && *diff == 0) {
 			redraw = 1;
 			*diff = 1;
-		} else if(key == '\n'){
+		} else if (key == '\n') {
 			*main = SETTING;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		if(redraw){
+		if (redraw) {
 			if(*diff == 1){
 				draw_arrow(141,100,1,1);
 				draw_arrow(141,300,0,1);
@@ -160,12 +153,12 @@ void diff_stage(int *diff, stage *main) {
 	}
 }
 
-void howto_stage(stage *main) {
+void howto_stage (stage *main) {
 	draw_button(300,BACK);
 	draw_arrow(135,300,0,0);
-	while(1){
+	while (1) {
 		char key = uart_getc();
-		if(key == '\n'){
+		if (key == '\n') {
 			*main = SETTING;
 			setBGcolor(1024,768,0x0);
 			return;
@@ -184,71 +177,61 @@ void count_down(int layout[][2]) {
 }
 
 void game_stage(stage *main) {
-
-//	count_down(block_layout);
-//	struct Ball new_ball = {50, 50, 13, 25, 25, 0.5, 70};
-//	struct Ball new_ball2 = {400, 300, 13, 25, 25, 2, 10};
-//	struct Paddle left_paddle = {'A', 20, 45, 20, 90, 50};
-//	struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 50};
-
-//	char input, key_down_A, key_down_B;
-//	int count_loop_A = 0;
-//	int count_loop_B = 0;
+	// draw background
     for (int y = 0 ; y < 768 ; y++)
         for (int x = 0 ; x < 1024 ; x++ )
                drawPixelARGB32(x, y, background_img[y*1024+x]);
-
     // Draw map
 	draw_map(block_layout);
 
 	// Balls
-	draw_ball(&new_ball); // ball 1
-    //	draw_ball(&new_ball2); // ball 2
-
+	draw_ball(&ball1);
+    draw_ball(&ball2);
 	//Paddles
     draw_paddle(&left_paddle);
     draw_paddle(&right_paddle);
 
-	while(1){
+	while (1) {
 		// Get player input
 		input = getUart();
 
-		// Player A (right) paddle control
-		if(input != '\0' && count_loop_A == 0){
-			if (input == 'w' || input == 's'){
+		// Player A (left) paddle control
+		if (input != '\0' && count_loop_A == 0) {
+			if (input == 'w' || input == 's') {
 				move_paddle(&left_paddle, input);
 				key_down_A = input;
 			}
 		}
 
-		// Player B (left) paddle control
-		if(input != '\0' && count_loop_B == 0){
-			 if(input == 'i' || input == 'k'){
+		// Player B (right) paddle control
+		if (input != '\0' && count_loop_B == 0) {
+			 if (input == 'i' || input == 'k') {
 				move_paddle(&right_paddle, input);
 				key_down_B = input;
 			}
 		}
 
 		// Player A button debounce
-		if(key_down_A != 0){
+		if (key_down_A != 0) {
 			count_loop_A++;
 			// Delay button press
-			if (count_loop_A == 10){
+			if (count_loop_A == 10) {
 				count_loop_A = 0;
 				key_down_A =0;
 			}
 		}
 
 		// Player B button debounce
-		if(key_down_B != 0){
+		if (key_down_B != 0) {
 			 count_loop_B++;
 			 // Delay button press
-			 if (count_loop_B == 10){
+			 if (count_loop_B == 10) {
 				 count_loop_B = 0;
 				 key_down_B = 0;
 			 }
 		 }
 
+		// escape key
 		if (input == 27) {
 			*main = PAUSE;
 			setBGcolor(1024,768,0x0);
@@ -256,20 +239,25 @@ void game_stage(stage *main) {
 		}
 
 		// Check collision for 2 paddles
-		check_collision_paddle(&new_ball, &left_paddle, &streaks);
-		check_collision_paddle(&new_ball, &right_paddle, &streaks);
+		check_collision_paddle(&ball1, &left_paddle);
+		check_collision_paddle(&ball2, &left_paddle);
+
+		check_collision_paddle(&ball1, &right_paddle);
+		check_collision_paddle(&ball2, &right_paddle);
+
 		// Draw 2 paddles
 		draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
-		// if ball hits walls => lose
-		if (!check_collision_block(&new_ball, block_layout, &left_paddle, &right_paddle, &streaks)) {
+		// if one player loses
+		if (!check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle) || !check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle)) {
 			*main = RESULT;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
 		// Move ball
-		move_ball(&new_ball);
+		draw_ball(&ball1);
+		draw_ball(&ball2);
 
 		wait_msec(2000);
 	}
@@ -282,43 +270,35 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 //		drawString(250, 100, 0x00FFFFFF, "tie game");
 //	else drawString(250, 100, 0x00FFFF00, "player B wins");
 //	drawString(250, 200, 0x00FFFFFF, "A  - B");
+
 	draw_button(300,RESTART);
 	draw_button(500,HOME);
 	int redraw = 1;
-	init_blocks(block_layout); // reset block layout
 
-	while(1) {
+	while (1) {
 		char key = uart_getc();
-		if(key == 'w' && *option == MENU){
-			// Reset ball
-			init_ball(&new_ball);
-			// Reset paddles
-			init_paddles(&left_paddle, &right_paddle);
-			// Reset streaks count
-			streaks = 0;
-
+		if (key == 'w' && *option == MENU) {
 			redraw = 1;
 			*option = GAME;
-		}else if(key == 's' && *option == GAME){
+		}else if (key == 's' && *option == GAME) {
 			redraw = 1;
 			*option = MENU;
-		}else if(key == '\n'){
+		}else if (key == '\n') {
+			// reset block layout
+			init_blocks(block_layout);
 			// Reset ball
-			init_ball(&new_ball);
+			init_ball(&ball1, &ball2);
 			// Reset paddles
 			init_paddles(&left_paddle, &right_paddle);
-			// Reset streaks count
-			streaks = 0;
-
 			*main = *option;
 			*option = GAME;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
 
-		if(redraw){
+		if (redraw) {
 			redraw = 0;
-			if(*option == MENU){
+			if (*option == MENU) {
 				draw_arrow(135,500,0,2);
 				draw_arrow(135,300,1,2);
 			} else {
@@ -333,22 +313,22 @@ void pause_stage(stage *option, stage *main){
 	draw_button(100,RESUME);
 	draw_button(300,EXIT);
 	int redraw = 1;
-	while(1) {
+	while (1) {
 		char key = uart_getc();
-		if(key == 'w' && *option == MENU){
+		if (key == 'w' && *option == MENU) {
 			redraw = 1;
 			*option = GAME;
-		}else if(key == 's' && *option == GAME){
+		} else if (key == 's' && *option == GAME) {
 			redraw = 1;
 			*option = MENU;
-		}else if(key == '\n'){
+		} else if (key == '\n') {
 			*main = *option;
 			*option = GAME;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
 
-		if(redraw){
+		if (redraw) {
 			redraw = 0;
 			if(*option == MENU){
 				draw_arrow(135,300,0,1);
@@ -362,6 +342,7 @@ void pause_stage(stage *option, stage *main){
 }
 
 void draw_arrow(int offsetX, int offsetY, int erase, int arrowIdx) {
+	uart_puts("draw arrow\n");
 	for (int y = 0; y < 130; y++ )
 			for (int x = 0; x < 77; x++) {
 				if (erase == 1)

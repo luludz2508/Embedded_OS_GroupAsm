@@ -7,12 +7,21 @@
 
 const float PI=3.14159;
 
-void init_ball(struct Ball *self) {
-	self->x = 700;
-	self->y = 100;
-	self->speed = 0.5;
-	self->angle = 180;
-	self->current_player = 'B';
+void init_ball(struct Ball *self1, struct Ball *self2) {
+	self1->current_player = 'A';
+	self1->x = 100;
+	self1->y = 100;
+	self1->speed = 0.5;
+	self1->angle = 180;
+	self1->streak = 0;
+
+	self2->current_player = 'B';
+	self2->x = 700;
+	self1->y = 100;
+	self1->speed = 0.5;
+	self1->angle = 180;
+	self1->streak = 0;
+
 }
 
 float sinx(float x, int n)
@@ -56,6 +65,3 @@ void draw_ball(struct Ball *self){
 	}
 }
 
-int move_ball(struct Ball *self){
-	draw_ball(self);
-}
