@@ -21,6 +21,17 @@ char input, key_down_A, key_down_B;
 int count_loop_A = 0;
 int count_loop_B = 0;
 
+void count_down() {
+	for(int c = 2; c >= 0; c--) {
+		int offset = c*197;
+		for (int y = 0 ; y < 230 ; y++)
+			for (int x = offset ; x < offset+197 ; x++ )
+				   drawPixelARGB32(400+x-offset, 270+y, count[y*591+x]);
+		wait_msec(500000);
+		setBGcolor(1024,768,0x0);
+	}
+}
+
 void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
@@ -48,6 +59,8 @@ void menu_stage(stage *option, stage *main) {
 			init_paddles(&left_paddle, &right_paddle);
 			*main = *option;
 			setBGcolor(1024,768,0x0);
+			if (*option == GAME)
+				count_down();
 			return;
 		}
 
@@ -164,16 +177,6 @@ void howto_stage (stage *main) {
 			return;
 		}
 	}
-}
-
-void count_down(int layout[][2]) {
-	for(int c = 0; c < 3; c++) {
-//		draw_map(layout);
-		drawChar_upper(380, 170, 0x00FFFF00, c);
-		wait_msec(10000);
-		setBGcolor(1024,768,0x0);
-	}
-//	draw_map(layout);
 }
 
 void game_stage(stage *main) {
@@ -306,6 +309,8 @@ void result_stage(stage *option, stage *main) {
 			*main = *option;
 			*option = GAME;
 			setBGcolor(1024,768,0x0);
+			if(*main == GAME)
+				count_down();
 			return;
 		}
 
