@@ -10,4 +10,4 @@ struct Ball {
 };
 
 void draw_ball(struct Ball *self);
-void init_ball(struct Ball *self1, struct Ball *self2);
+void init_ball(struct Ball *self1, struct Ball *self2, int diff);

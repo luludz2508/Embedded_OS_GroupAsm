@@ -292,7 +292,7 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag) {
 	// ball hit right wall => B loses 3 points
-		if (ball->x + ball->radius >= 1014) {
+		if (ball->x + ball->radius >= 1013) {
 			ball->streak = 0;
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
@@ -320,7 +320,7 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 		}
 
 		// ball hit bottom
-		if (ball->y + ball->radius >= 758 || flag == 32) {
+		if (ball->y + ball->radius >= 757 || flag == 32) {
 			ball->angle = 360 - ball->angle;
 		}
 
@@ -350,7 +350,7 @@ void game_run() {
 	while (1) {
 		switch(cur_stage) {
 			case MENU: {
-				menu_stage(&option, &cur_stage);
+				menu_stage(&option, &cur_stage,&diff);
 				break;
 			}
 			case SETTING: {
@@ -374,7 +374,7 @@ void game_run() {
 				break;
 			}
 			case RESULT:{
-				result_stage(&option, &cur_stage);
+				result_stage(&option, &cur_stage,&diff);
 				break;
 			}
 			case PAUSE: {

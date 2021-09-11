@@ -32,7 +32,7 @@ void count_down() {
 	}
 }
 
-void menu_stage(stage *option, stage *main) {
+void menu_stage(stage *option, stage *main, int *diff) {
     // draw background image
     for (int y = 0 ; y < 768 ; y++){
         for (int x = 0 ; x < 1024 ; x++ ){
@@ -60,7 +60,7 @@ void menu_stage(stage *option, stage *main) {
 			// reset block layout
 			init_blocks(block_layout);
 			// Reset ball
-			init_ball(&ball1, &ball2);
+			init_ball(&ball1, &ball2, *diff);
 			// Reset paddles
 			init_paddles(&left_paddle, &right_paddle);
 			*main = *option;
@@ -302,7 +302,7 @@ void game_stage(stage *main) {
 	}
 }
 
-void result_stage(stage *option, stage *main) {
+void result_stage(stage *option, stage *main, int *diff) {
     // draw background image
     for (int y = 0 ; y < 768 ; y++){
         for (int x = 0 ; x < 1024 ; x++ ){
@@ -339,7 +339,7 @@ void result_stage(stage *option, stage *main) {
 			// reset block layout
 			init_blocks(block_layout);
 			// Reset ball
-			init_ball(&ball1, &ball2);
+			init_ball(&ball1, &ball2, *diff);
 			// Reset paddles
 			init_paddles(&left_paddle, &right_paddle);
 			*main = *option;
