@@ -249,10 +249,6 @@ void game_stage(stage *main) {
 		draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
-        //erase score
-        draw_nums(left_paddle.score, 100, 20, 1);
-        draw_nums(right_paddle.score, 800, 20, 1);
-
 		// if one player loses
 		if (!check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle) || !check_collision_block(&ball2, block_layout, &left_paddle, &right_paddle)) {
 			*main = RESULT;
@@ -263,9 +259,7 @@ void game_stage(stage *main) {
 		draw_ball(&ball1);
 		draw_ball(&ball2);
 
-		//draw score
-		draw_nums(left_paddle.score, 100, 20, 0);
-		draw_nums(right_paddle.score, 800, 20, 0);
+
 		wait_msec(2000);
 	}
 }

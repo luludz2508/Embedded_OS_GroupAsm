@@ -13,9 +13,6 @@
 #ifndef MAX_BLOCKS
 #define MAX_BLOCKS 64
 #endif
-//int BRICK_WIDTH = 23;
-//int BRICK_HEIGHT = 83;
-//int MAX_BLOCKS = 64;
 
 // Draw brick BRICK_WIDTHxBRICK_HEIGHT
 void draw_block(struct Block *self) {
@@ -29,13 +26,9 @@ void draw_block(struct Block *self) {
 // Remove block
 void remove_block(struct Block *self) {
 	for (int y = 0; y < self->height; y++){
-		for (int x = 0; x < self->width; x++){
-//			drawPixelARGB32(x + self->x, y + self->y, 0x00);
+		for (int x = 0; x < self->width; x++)
 			drawPixelARGB32(x + self->x, y + self->y, background_img[(int)(x + self->x)*1024+(int)(y + self->y)]);
-		}
 	}
-
-	uart_puts("remove block");
 }
 
 // Init block layout
@@ -56,14 +49,6 @@ void draw_map(int block_layout[][2]) {
 	for (int i = 100; i <= 690; i+=83) {
 		// x-axis
 		for (int j = 408; j <= 573; j+=23) {
-//						uart_puts("block layout[0]=");
-//						uart_dec(block_layout[layout_index][0]);
-//						uart_puts(",	block layout[1]=");
-//						uart_dec(block_layout[layout_index][1]);
-//						uart_puts(",	layout index=");
-//						uart_dec(layout_index);
-//						uart_puts("\n");
-
 			if (block_layout[layout_index][0] > -1) {
 				block.x = j;
 				block.y = i;

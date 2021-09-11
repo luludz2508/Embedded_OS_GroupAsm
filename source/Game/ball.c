@@ -46,7 +46,6 @@ void draw_ball(struct Ball *self){
 	for(int y = -r; y <= r; y++)
 		for(int x = -r; x <= r; x++)
 			if(x*x + y*y <= r*r)
-//				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), 0x0);
 				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), background_img[(int)(y + ball_y)*1024+(int)(x + ball_x)]);
 
 	self->x+=(self->speed) * sinx(PI/2-radian,20);
