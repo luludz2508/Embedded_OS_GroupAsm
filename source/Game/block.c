@@ -46,7 +46,7 @@ void draw_map(int block_layout[][2]) {
 	int layout_index = 0;
 
 	// y-axis
-	for (int i = 100; i <= 690; i+=83) {
+	for (int i = 75; i <= 665; i+=83) {
 		// x-axis
 		for (int j = 408; j <= 573; j+=23) {
 			if (block_layout[layout_index][0] > -1) {

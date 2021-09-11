@@ -14,8 +14,8 @@ struct Ball ball1 = {100, 100, 9, 0.5, 180, 0, 'A'};
 struct Ball ball2 = {700, 100, 9, 0.5, 180, 0, 'B'};
  
 // player name, x, y, width, height, speed, score
-struct Paddle left_paddle = {'A', 20, 45, 20, 90, 25, 0};
-struct Paddle right_paddle = {'B', 1004, 45, 20, 90, 25, 0};
+struct Paddle left_paddle = {'A', 30, 45, 20, 90, 25, 0};
+struct Paddle right_paddle = {'B', 994, 45, 20, 90, 25, 0};
 
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
@@ -190,6 +190,11 @@ void game_stage(stage *main) {
 	//Paddles
     draw_paddle(&left_paddle);
     draw_paddle(&right_paddle);
+    //score
+    draw_nums(right_paddle.score, 800, 20, 0);
+    draw_nums(left_paddle.score, 100, 20, 0);
+    //frame
+    draw_frame(4);
 
 	while (1) {
 		// Get player input

@@ -230,11 +230,13 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				// Scoring
 				ball->streak += 1;
 				if (ball->current_player == 'A') {
+					draw_frame(padA->score);
 			        //erase then draw score
 			        draw_nums(padA->score, 100, 20, 1);
 					padA->score += ball->streak;
 					draw_nums(padA->score, 100, 20, 0);
 				} else{
+					draw_frame(padB->score);
 					draw_nums(padB->score, 800, 20, 1);
 					padB->score += ball->streak;
 					draw_nums(padB->score, 800, 20, 0);
@@ -290,11 +292,11 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag) {
 	// ball hit right wall => B loses 3 points
-		if (ball->x + ball->radius >= 1024) {
+		if (ball->x + ball->radius >= 1014) {
 			ball->streak = 0;
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
-			else ball->angle =540 - ball->angle;
+			else ball->angle = 540 - ball->angle;
 
 			draw_nums(padB->score, 800, 20, 1);
 			padB->score-=3;
@@ -304,7 +306,7 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 		}
 
 		// ball hit left wall => A loses 3 points
-		if (ball->x - ball->radius <= 0) {
+		if (ball->x - ball->radius <= 11) {
 			ball->streak = 0;
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
@@ -318,7 +320,7 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 		}
 
 		// ball hit bottom
-		if (ball->y + ball->radius >= 768 || flag == 32) {
+		if (ball->y + ball->radius >= 758 || flag == 32) {
 			ball->angle = 360 - ball->angle;
 		}
 

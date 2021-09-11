@@ -18,6 +18,8 @@ unsigned char *fb;
 /**
 * Set screen resolution to 1024x768
 */
+void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill);
+
 void framebf_init(int physicalWidth , int physicalHeight,int virtualWidth,int virtualHeight)
 {
 	mbox[0] = 35*4; // Length of message in bytes
@@ -247,4 +249,14 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 
 	}
 
+}
+
+void draw_frame(int score) {
+	int color[] = {0x004bcc83, 0x00ad1342, 0x007700a6, 0x001f4e91, 0x00defe47};
+	unsigned int attr = color[score%5];
+	//top left bottom right
+	 drawRectARGB32(0, 0, 1024, 10, attr, 1);
+	 drawRectARGB32(0, 0, 10, 768, attr, 1);
+	 drawRectARGB32(0, 758, 1024, 768, attr, 1);
+	 drawRectARGB32(1014, 0, 1024, 768, attr, 1);
 }
