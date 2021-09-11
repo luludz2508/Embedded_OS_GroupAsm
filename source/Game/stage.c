@@ -24,15 +24,20 @@ int count_loop_B = 0;
 void menu_stage(stage *option, stage *main) {
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
-	int redraw = 1;
+
+	if(*option == SETTING){
+		draw_arrow(114,100,1,1);
+		draw_arrow(114,300,0,1);
+	} else {
+		draw_arrow(114,100,0,1);
+		draw_arrow(114,300,1,1);
+	}
 
 	while(1){
 		char key = uart_getc();
 		if (key == 'w' && *option == SETTING) {
 			*option = GAME;
-			redraw = 1;
 		} else if (key == 's' && *option == GAME) {
-			redraw = 1;
 			*option = SETTING;
 		} else if (key == '\n') {
 			// reset block layout
@@ -45,29 +50,28 @@ void menu_stage(stage *option, stage *main) {
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		if(redraw){
-			uart_puts("should draw\n");
-			if(*option == SETTING){
-				draw_arrow(114,100,1,1);
-				draw_arrow(114,300,0,1);
-			} else {
-				draw_arrow(114,100,0,1);
-				draw_arrow(114,300,1,1);
-			}
-			redraw = 0;
+
+		if(*option == SETTING){
+			draw_arrow(114,100,1,1);
+			draw_arrow(114,300,0,1);
+		} else {
+			draw_arrow(114,100,0,1);
+			draw_arrow(114,300,1,1);
 		}
+
 	}
 
 }
 
 void setting_stage(stage *main) {
+	int setting = 0;
+	int stage_idx[4] = {PLAYER,DIFF,HOWTO,MENU};
+
 	draw_button(40,SELECT);
 	draw_button(210,LEVELS);
 	draw_button(380, ABOUT);
 	draw_button(550, HOME);
-	int redraw = 1;
-	int setting = 0;
-	int stage_idx[4] = {PLAYER,DIFF,HOWTO,MENU};
+	draw_arrow(135,setting*170+40,0,2);
 
 	while(1) {
 		char key = uart_getc();
@@ -75,50 +79,45 @@ void setting_stage(stage *main) {
 			//erase option pointer
 			draw_arrow(135,setting*170+40,1,2);
 			setting-=1;
-			redraw = 1;
 		} else if (key == 's' && setting < 3) {
 			draw_arrow(135,setting*170+40,1,2);
 			setting+=1;
-			redraw = 1;
 		} else if (key == '\n') {
 			*main = stage_idx[setting];
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-
-		if(redraw){
-			draw_arrow(135,setting*170+40,0,2);
-			redraw = 0;
-		}
+		draw_arrow(135,setting*170+40,0,2);
 	}
 }
 
 void player_stage(int *mode, stage *main) {
 	draw_button(100,ONE);
 	draw_button(300,MULTI);
-	int redraw = 1;
+	if(*mode == 1){
+		draw_arrow(75,100,1,0);
+		draw_arrow(75,300,0,0);
+	} else {
+		draw_arrow(75,100,0,0);
+		draw_arrow(75,300,1,0);
+	}
 	while (1) {
 		char key = uart_getc();
 		if (key == 'w' && *mode == 1) {
 			*mode = 0;
-			redraw = 1;
 		} else if (key == 's' && *mode == 0) {
-			redraw = 1;
 			*mode = 1;
 		} else if (key == '\n') {
 			*main = SETTING;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		if (redraw) {
-			if(*mode == 1){
-				draw_arrow(75,100,1,0);
-				draw_arrow(75,300,0,0);
-			} else {
-				draw_arrow(75,100,0,0);
-				draw_arrow(75,300,1,0);
-			}
-			redraw = 0;
+		if(*mode == 1){
+			draw_arrow(75,100,1,0);
+			draw_arrow(75,300,0,0);
+		} else {
+			draw_arrow(75,100,0,0);
+			draw_arrow(75,300,1,0);
 		}
 	}
 }
@@ -126,29 +125,30 @@ void player_stage(int *mode, stage *main) {
 void diff_stage(int *diff, stage *main) {
 	draw_button(100,EASY);
 	draw_button(300,HARD);
-	int redraw = 1;
+	if(*diff == 1){
+		draw_arrow(141,100,1,1);
+		draw_arrow(141,300,0,1);
+	} else {
+		draw_arrow(141,100,0,1);
+		draw_arrow(141,300,1,1);
+	}
 	while (1) {
 		char key = uart_getc();
 		if (key == 'w' && *diff == 1) {
 			*diff = 0;
-			redraw = 1;
 		} else if (key == 's' && *diff == 0) {
-			redraw = 1;
 			*diff = 1;
 		} else if (key == '\n') {
 			*main = SETTING;
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-		if (redraw) {
-			if(*diff == 1){
-				draw_arrow(141,100,1,1);
-				draw_arrow(141,300,0,1);
-			} else {
-				draw_arrow(141,100,0,1);
-				draw_arrow(141,300,1,1);
-			}
-			redraw = 0;
+		if(*diff == 1){
+			draw_arrow(141,100,1,1);
+			draw_arrow(141,300,0,1);
+		} else {
+			draw_arrow(141,100,0,1);
+			draw_arrow(141,300,1,1);
 		}
 	}
 }
@@ -249,8 +249,12 @@ void game_stage(stage *main) {
 		draw_paddle_image(&left_paddle);
         draw_paddle_image(&right_paddle);
 
+        //erase score
+        draw_nums(left_paddle.score, 100, 20, 1);
+        draw_nums(right_paddle.score, 800, 20, 1);
+
 		// if one player loses
-		if (!check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle) || !check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle)) {
+		if (!check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle) || !check_collision_block(&ball2, block_layout, &left_paddle, &right_paddle)) {
 			*main = RESULT;
 			setBGcolor(1024,768,0x0);
 			return;
@@ -259,6 +263,9 @@ void game_stage(stage *main) {
 		draw_ball(&ball1);
 		draw_ball(&ball2);
 
+		//draw score
+		draw_nums(left_paddle.score, 100, 20, 0);
+		draw_nums(right_paddle.score, 800, 20, 0);
 		wait_msec(2000);
 	}
 }
@@ -273,15 +280,14 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 
 	draw_button(300,RESTART);
 	draw_button(500,HOME);
-	int redraw = 1;
+	draw_arrow(135,500,1,2);
+	draw_arrow(135,300,0,2);
 
 	while (1) {
 		char key = uart_getc();
 		if (key == 'w' && *option == MENU) {
-			redraw = 1;
 			*option = GAME;
 		}else if (key == 's' && *option == GAME) {
-			redraw = 1;
 			*option = MENU;
 		}else if (key == '\n') {
 			// reset block layout
@@ -296,15 +302,12 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 			return;
 		}
 
-		if (redraw) {
-			redraw = 0;
-			if (*option == MENU) {
-				draw_arrow(135,500,0,2);
-				draw_arrow(135,300,1,2);
-			} else {
-				draw_arrow(135,500,1,2);
-				draw_arrow(135,300,0,2);
-			}
+		if (*option == MENU) {
+			draw_arrow(135,500,0,2);
+			draw_arrow(135,300,1,2);
+		} else {
+			draw_arrow(135,500,1,2);
+			draw_arrow(135,300,0,2);
 		}
 	}
 }
@@ -312,14 +315,14 @@ void result_stage(stage *option, stage *main, int score1, int score2) {
 void pause_stage(stage *option, stage *main){
 	draw_button(100,RESUME);
 	draw_button(300,EXIT);
-	int redraw = 1;
+	draw_arrow(135,300,1,1);
+	draw_arrow(135,100,0,1);
+
 	while (1) {
 		char key = uart_getc();
 		if (key == 'w' && *option == MENU) {
-			redraw = 1;
 			*option = GAME;
 		} else if (key == 's' && *option == GAME) {
-			redraw = 1;
 			*option = MENU;
 		} else if (key == '\n') {
 			*main = *option;
@@ -327,22 +330,17 @@ void pause_stage(stage *option, stage *main){
 			setBGcolor(1024,768,0x0);
 			return;
 		}
-
-		if (redraw) {
-			redraw = 0;
-			if(*option == MENU){
-				draw_arrow(135,300,0,1);
-				draw_arrow(135,100,1,1);
-			} else {
-				draw_arrow(135,300,1,1);
-				draw_arrow(135,100,0,1);
-			}
+		if(*option == MENU){
+			draw_arrow(135,300,0,1);
+			draw_arrow(135,100,1,1);
+		} else {
+			draw_arrow(135,300,1,1);
+			draw_arrow(135,100,0,1);
 		}
 	}
 }
 
 void draw_arrow(int offsetX, int offsetY, int erase, int arrowIdx) {
-	uart_puts("draw arrow\n");
 	for (int y = 0; y < 130; y++ )
 			for (int x = 0; x < 77; x++) {
 				if (erase == 1)

@@ -242,14 +242,14 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				ball->streak += 1;
 				if (ball->current_player == 'A') {
 					padA->score += ball->streak;
-					uart_puts("Player A score: ");
-					uart_dec(padA->score);
-					uart_sendc('\n');
+//					uart_puts("Player A score: ");
+//					uart_dec(padA->score);
+//					uart_sendc('\n');
 				} else{
 					padB->score += ball->streak;
-					uart_puts("Player B score: ");
-					uart_dec(padB->score);
-					uart_sendc('\n');
+//					uart_puts("Player B score: ");
+//					uart_dec(padB->score);
+//					uart_sendc('\n');
 				}
 
 				flag = flag_x + flag_y;
@@ -270,43 +270,33 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 	// ball hit right wall => lose 3 points
 	if (ball->x + ball->radius >= 1024) {
-		ball->angle = 180 - ball->angle;
+		ball->streak = 0;
+		if (ball->angle<=180)
+			ball->angle = 180 - ball->angle;
+		else ball->angle =540 - ball->angle;
 
-		if (ball->current_player == 'A') {
-			uart_puts("player A lose points R\n");
-			padA->score-=3;
-			if (padA->score <= 0)
-				return 0;
-		}
-		else {
-			uart_puts("player B lose points R\n");
-			padB->score-=3;
-			if (padB->score <= 0)
-				return 0;
-		}
+//		uart_puts("player B lose points\n");
+		padB->score-=3;
+		if (padB->score <= 0)
+			return 0;
+
 	}
 
 	// ball hit left wall => lose 3 points
 	if (ball->x - ball->radius <= 0) {
-		uart_puts("\nBall hits left ");
-		uart_dec((int) ball->angle);
-		ball->angle = 180 - ball->angle;
-		ball->x += 2*ball->radius;
-		uart_puts("Ball rebounce ");
-		uart_dec((int) ball->angle);
-
-//		if (ball->current_player == 'A') {
-//			uart_puts("player A lose points L\n");
-//			padA->score-=3;
-//			if (padA->score <= 0)
-//				return 0;
-//		}
-//		else {
-//			uart_puts("player B lose points L\n");
-//			padB->score-=3;
-//			if (padB->score <= 0)
-//				return 0;
-//		}
+		ball->streak = 0;
+//		uart_puts("\nBall hits left ");
+//		uart_sendc(ball->current_player);
+//		uart_dec((int) ball->angle);
+		if (ball->angle<=180)
+			ball->angle = 180 - ball->angle;
+		else ball->angle =540 - ball->angle;
+//		uart_puts("Ball rebounce ");
+//		uart_dec((int) ball->angle);
+//		uart_puts("player A lose points\n");
+		padA->score-=3;
+		if (padA->score <= 0)
+			return 0;
 	}
 
 	// ball hit bottom
@@ -347,27 +337,6 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 	return 1;
 }
-
-//void score(struct Paddle *padA, struct Paddle *padB, char pad_name, int *streaks) {
-//	// Increase streaks to calculate score
-//	*streaks+=1;
-//
-//	if (pad_name == 'A')
-//		padA->score+=*streaks;
-//	else
-//		padB->score+=*streaks;
-//
-//
-//	uart_puts("\nstreaks=");
-//		uart_dec(*streaks);
-//	uart_puts(", currentplayer=");
-//		uart_sendc(pad_name);
-//		uart_puts(", padA_score=");
-//			uart_dec(padA->score);
-//	uart_puts(", padB_score=");
-//				uart_dec(padB->score);
-//	uart_puts("\n");
-//}
 
 void game_run() {
 	int physical_width = 1024;

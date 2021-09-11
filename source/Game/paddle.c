@@ -56,13 +56,13 @@ void init_paddles(struct Paddle *p1, struct Paddle *p2) {
 	// Paddle 1
 	p1->x = 20;
 	p1->y = 45;
-	p1->speed = 25;
+	p1->speed = 50;
 	p1->score = 20;
 
 	// Paddle 2
 	p2->x = 1004;
 	p2->y = 45;
-	p2->speed = 25;
+	p2->speed = 50;
 	p2->score = 20;
 }
 

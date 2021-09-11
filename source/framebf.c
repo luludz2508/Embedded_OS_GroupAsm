@@ -1,8 +1,11 @@
 //-----------------------------------framebf.c-------------------------------------
 #include "alphabet_lowercase.h"
 #include "alphabet_uppercase.h"
+#include "number.h"
 #include "mbox.h"
 #include "uart.h"
+#include "Game/background.h"
+
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
@@ -175,6 +178,56 @@ void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
 			}
 		}
 	}
+}
+
+void draw_num(int num, int offsetX, int offsetY, int erase) {
+	//31x32
+	if (num > 0 && num < 6) {
+		int offset = (num-1)*31;
+		for(int x=offset; x<offset+31; x++){
+			for (int y=0; y<32; y++){
+				if(one2five[y*155+x] > 0) {
+					if (erase)
+						drawPixelARGB32(x-offset+offsetX, y+offsetY,  background_img[(int)(y+offsetY)*1024+(int)(x-offset+offsetX)]);
+					else drawPixelARGB32(x-offset+offsetX, y+offsetY, 0x00FFFFFF);
+				}
+			}
+		}
+	} else {
+		int offset = 4*31;
+		if (num != 0)
+			offset = (num-6)*31;
+		for(int x=offset; x<offset+31; x++){
+			for (int y=0; y<32; y++){
+				if(six2zero[y*155+x] > 0xc0) {
+					if (erase)
+						drawPixelARGB32(x-offset+offsetX, y+offsetY,  background_img[(int)(y+offsetY)*1024+(int)(x-offset+offsetX)]);
+					else drawPixelARGB32(x-offset+offsetX, y+offsetY, 0x00FFFFFF);
+				}
+			}
+		}
+
+	}
+}
+
+void draw_nums(int num, int offsetX, int offsetY, int erase) {
+	int c = 0; /* digit position */
+	int n = num;
+	while (n != 0) {
+	    n /= 10;
+	    c++;
+	}
+	c -= 1;
+	n = num;
+	/* extract each digit */
+	while (c>=0) {
+	    int cur_num = n % 10;
+	    draw_num(cur_num, offsetX+(31*c), offsetY, erase);
+	    n /= 10;
+	    c--;
+	}
+
+
 }
 //void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 //	int offsetWidth=offsetX;
