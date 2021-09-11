@@ -4,14 +4,14 @@
 #include "../framebf.h"
 #include "block.h"
 #include "paddle.h"
-#include "background.h"
+#include "background_image.h"
 
 // [block index][0:x, 1:y]
 int block_layout[64][2] = {{0}};
 
 // Ball: x, y, radius, speed, angle, current player
-struct Ball ball1 = {100, 100, 9, 0.5, 180, 0, 'A'};
-struct Ball ball2 = {700, 100, 9, 0.5, 180, 0, 'B'};
+struct Ball ball1 = {100, 100, 9, 0.5, 90, 0, 'A'};
+struct Ball ball2 = {700, 100, 9, 0.5, 120, 0, 'B'};
  
 // player name, x, y, width, height, speed, score
 struct Paddle left_paddle = {'A', 30, 45, 20, 90, 25, 0};
@@ -33,6 +33,12 @@ void count_down() {
 }
 
 void menu_stage(stage *option, stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	draw_button(100,START);
 	draw_button(300,OPTIONS);
 
@@ -77,6 +83,12 @@ void menu_stage(stage *option, stage *main) {
 }
 
 void setting_stage(stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	int setting = 0;
 	int stage_idx[4] = {PLAYER,DIFF,HOWTO,MENU};
 
@@ -105,6 +117,12 @@ void setting_stage(stage *main) {
 }
 
 void player_stage(int *mode, stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	draw_button(100,ONE);
 	draw_button(300,MULTI);
 	if(*mode == 1){
@@ -136,6 +154,12 @@ void player_stage(int *mode, stage *main) {
 }
 
 void diff_stage(int *diff, stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	draw_button(100,EASY);
 	draw_button(300,HARD);
 	if(*diff == 1){
@@ -167,6 +191,12 @@ void diff_stage(int *diff, stage *main) {
 }
 
 void howto_stage (stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	draw_button(300,BACK);
 	draw_arrow(135,300,0,0);
 	while (1) {
@@ -264,8 +294,8 @@ void game_stage(stage *main) {
 			return;
 		}
 		// Move ball
-		draw_ball(&ball1);
-		draw_ball(&ball2);
+//		draw_ball(&ball1);
+//		draw_ball(&ball2);
 
 
 		wait_msec(2000);
@@ -273,6 +303,12 @@ void game_stage(stage *main) {
 }
 
 void result_stage(stage *option, stage *main) {
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	if(left_paddle.score > right_paddle.score){
 		drawString(330, 100, 0x00FFFFFF, "Player A wins");
 		draw_nums(left_paddle.score,400,200,0);
@@ -325,6 +361,12 @@ void result_stage(stage *option, stage *main) {
 }
 
 void pause_stage(stage *option, stage *main){
+    // draw background image
+    for (int y = 0 ; y < 768 ; y++){
+        for (int x = 0 ; x < 1024 ; x++ ){
+            drawPixelARGB32(x, y, background_img[y*1024+x]);
+        }
+    }
 	draw_button(100,RESUME);
 	draw_button(300,EXIT);
 	draw_arrow(135,300,1,1);
@@ -354,11 +396,11 @@ void pause_stage(stage *option, stage *main){
 
 void draw_arrow(int offsetX, int offsetY, int erase, int arrowIdx) {
 	for (int y = 0; y < 130; y++ )
-			for (int x = 0; x < 77; x++) {
-				if (erase == 1)
-					drawPixelARGB32(x+offsetX, y+offsetY, 0x0);
-				else drawPixelARGB32(x+offsetX, y+offsetY, arrow[arrowIdx][y*77+x]);
-			}
+        for (int x = 0; x < 77; x++) {
+            if (erase == 1)
+                drawPixelARGB32(x+offsetX, y+offsetY, 0x0);
+            else drawPixelARGB32(x+offsetX, y+offsetY, arrow[arrowIdx][y*77+x]);
+        }
 }
 
 void draw_button(int offsetY,int buttonIdx){

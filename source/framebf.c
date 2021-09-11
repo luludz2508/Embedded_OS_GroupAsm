@@ -4,7 +4,7 @@
 #include "number.h"
 #include "mbox.h"
 #include "uart.h"
-#include "Game/background.h"
+#include "Game/background_image.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32

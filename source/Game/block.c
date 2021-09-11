@@ -2,7 +2,7 @@
 #include "../uart.h"
 #include "../framebf.h"
 #include "block_image.h"
-#include "background.h"
+#include "background_image.h"
 
 #ifndef BRICK_WIDTH
 #define BRICK_WIDTH 23

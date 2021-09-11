@@ -5,7 +5,7 @@
 #include "../uart.h"
 #include "stage.h"
 #include "block.h"
-#include "background.h"
+#include "background_image.h"
 
 #ifndef BRICK_WIDTH
 #define BRICK_WIDTH 23
