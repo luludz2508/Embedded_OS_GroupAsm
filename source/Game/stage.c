@@ -264,13 +264,21 @@ void game_stage(stage *main) {
 	}
 }
 
-void result_stage(stage *option, stage *main, int score1, int score2) {
-//	if(score1 > score2)
-//		drawString(250, 100, 0x00FFFF00, "player A wins");
-//	else if (score1 == score2)
-//		drawString(250, 100, 0x00FFFFFF, "tie game");
-//	else drawString(250, 100, 0x00FFFF00, "player B wins");
-//	drawString(250, 200, 0x00FFFFFF, "A  - B");
+void result_stage(stage *option, stage *main) {
+	if(left_paddle.score > right_paddle.score){
+		drawString(330, 100, 0x00FFFFFF, "Player A wins");
+		draw_nums(left_paddle.score,400,200,0);
+		draw_num(0,600,200,0);
+	} else if (left_paddle.score == right_paddle.score){
+		drawString(550, 100, 0x00FFFFFF, "tie game");
+		draw_num(0,400,200,0);
+		draw_num(0,600,200,0);
+	} else {
+		draw_num(0,400,200,0);
+		draw_nums(right_paddle.score,600,200,0);
+		drawString(330, 100, 0x00FFFFFF, "Player B wins");
+	}
+
 
 	draw_button(300,RESTART);
 	draw_button(500,HOME);

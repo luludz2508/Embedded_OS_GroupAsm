@@ -372,7 +372,7 @@ void game_run() {
 				break;
 			}
 			case RESULT:{
-				result_stage(&option, &cur_stage, 10, 5);
+				result_stage(&option, &cur_stage);
 				break;
 			}
 			case PAUSE: {
