@@ -15,10 +15,15 @@
 #endif
 
 // Draw brick BRICK_WIDTHxBRICK_HEIGHT
-void draw_block(struct Block *self) {
+// color = 0 => blue
+// color = 1 => grey
+void draw_block(struct Block *self, int color) {
 	for (int y = 0; y < self->height; y++){
 		for (int x = 0; x < self->width; x++){
-			drawPixelARGB32(x + self->x, y + self->y, block_image[y * self->width + x]);
+			if (color == 0)
+				drawPixelARGB32(x + self->x, y + self->y, block_image[y * self->width + x]);
+			else
+				drawPixelARGB32(x + self->x, y + self->y, unbreakable_block_image[y * self->width + x]);
 		}
 	}
 }
@@ -45,6 +50,7 @@ void draw_map(int block_layout[][2]) {
 	struct Block block;
 	int layout_index = 0;
 
+
 	// y-axis
 	for (int i = 75; i <= 665; i+=83) {
 		// x-axis
@@ -58,7 +64,10 @@ void draw_map(int block_layout[][2]) {
 				block_layout[layout_index][0] = j;
 				block_layout[layout_index][1] = i;
 
-				draw_block(&block);
+				if (layout_index % 7 == 0 || layout_index % 9 == 0)
+					draw_block(&block, 1);
+				else
+					draw_block(&block, 0);
 			}
 
 			layout_index++;

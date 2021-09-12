@@ -232,14 +232,16 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				block.y = block_layout[i][1];
 				block.width = BRICK_WIDTH;
 				block.height = BRICK_HEIGHT;
-				// Delete from block layout
-				block_layout[i][0] = -1;
-				block_layout[i][1] = -1;
-				// Remove on screen
-				remove_block(&block);
+
+				if (i % 7 != 0 && i % 9 != 0) {
+					// Delete from block layout
+					block_layout[i][0] = -1;
+					block_layout[i][1] = -1;
+					// Remove on screen
+					remove_block(&block);
+				}
 
 				// Scoring
-
 				if (ball->current_player == 'A') {
 					draw_frame(padA->score);
 			        //erase then draw score & streak
