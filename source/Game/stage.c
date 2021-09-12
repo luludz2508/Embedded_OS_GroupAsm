@@ -22,13 +22,30 @@ int count_loop_A = 0;
 int count_loop_B = 0;
 
 void count_down() {
+	// draw background image
+	for (int y = 0 ; y < 768 ; y++){
+		for (int x = 0 ; x < 1024 ; x++ ){
+			drawPixelARGB32(x, y, background_img[y*1024+x]);
+		}
+	}
+	//Paddles
+	draw_paddle(&left_paddle);
+	draw_paddle(&right_paddle);
+	//score
+	draw_nums(right_paddle.score, 800, 20, 0);
+	draw_nums(left_paddle.score, 100, 20, 0);
+	//frame
+	draw_frame(4);
+
 	for(int c = 2; c >= 0; c--) {
 		int offset = c*197;
 		for (int y = 0 ; y < 230 ; y++)
-			for (int x = offset ; x < offset+197 ; x++ )
-				   drawPixelARGB32(400+x-offset, 270+y, count[y*591+x]);
+			for (int x = offset ; x < offset+197 ; x++ ){
+				if (count[y*591+x] == 0)
+					drawPixelARGB32(400+x-offset, 270+y, background_img[(270+y)*1024+(400+x-offset)]);
+				else drawPixelARGB32(400+x-offset, 270+y, count[y*591+x]);
+			}
 		wait_msec(500000);
-		setBGcolor(1024,768,0x0);
 	}
 }
 
@@ -64,7 +81,6 @@ void menu_stage(stage *option, stage *main, int *diff) {
 			// Reset paddles
 			init_paddles(&left_paddle, &right_paddle);
 			*main = *option;
-			setBGcolor(1024,768,0x0);
 			if (*option == GAME)
 				count_down();
 			return;
@@ -109,7 +125,6 @@ void setting_stage(stage *main) {
 			setting+=1;
 		} else if (key == '\n') {
 			*main = stage_idx[setting];
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 		draw_arrow(135,setting*170+40,0,2);
@@ -140,7 +155,6 @@ void player_stage(int *mode, stage *main) {
 			*mode = 1;
 		} else if (key == '\n') {
 			*main = SETTING;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 		if(*mode == 1){
@@ -177,7 +191,6 @@ void diff_stage(int *diff, stage *main) {
 			*diff = 1;
 		} else if (key == '\n') {
 			*main = SETTING;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 		if(*diff == 1){
@@ -203,31 +216,14 @@ void howto_stage (stage *main) {
 		char key = uart_getc();
 		if (key == '\n') {
 			*main = SETTING;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 	}
 }
 
 void game_stage(stage *main) {
-	// draw background
-    for (int y = 0 ; y < 768 ; y++)
-        for (int x = 0 ; x < 1024 ; x++ )
-               drawPixelARGB32(x, y, background_img[y*1024+x]);
     // Draw map
 	draw_map(block_layout);
-
-	// Balls
-	draw_ball(&ball1);
-    draw_ball(&ball2);
-	//Paddles
-    draw_paddle(&left_paddle);
-    draw_paddle(&right_paddle);
-    //score
-    draw_nums(right_paddle.score, 800, 20, 0);
-    draw_nums(left_paddle.score, 100, 20, 0);
-    //frame
-    draw_frame(4);
 
 	while (1) {
 		// Get player input
@@ -272,7 +268,6 @@ void game_stage(stage *main) {
 		// escape key
 		if (input == 27) {
 			*main = PAUSE;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 
@@ -290,13 +285,8 @@ void game_stage(stage *main) {
 		// if one player loses
 		if (!check_collision_block(&ball1, block_layout, &left_paddle, &right_paddle) || !check_collision_block(&ball2, block_layout, &left_paddle, &right_paddle)) {
 			*main = RESULT;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
-		// Move ball
-//		draw_ball(&ball1);
-//		draw_ball(&ball2);
-
 
 		wait_msec(2000);
 	}
@@ -344,7 +334,6 @@ void result_stage(stage *option, stage *main, int *diff) {
 			init_paddles(&left_paddle, &right_paddle);
 			*main = *option;
 			*option = GAME;
-			setBGcolor(1024,768,0x0);
 			if(*main == GAME)
 				count_down();
 			return;
@@ -361,9 +350,9 @@ void result_stage(stage *option, stage *main, int *diff) {
 }
 
 void pause_stage(stage *option, stage *main){
-    // draw background image
-    for (int y = 0 ; y < 768 ; y++){
-        for (int x = 0 ; x < 1024 ; x++ ){
+    // draw background image at buttons location
+    for (int y = 75 ; y < 750 ; y++){
+        for (int x = 135 ; x < 690 ; x++ ){
             drawPixelARGB32(x, y, background_img[y*1024+x]);
         }
     }
@@ -379,9 +368,13 @@ void pause_stage(stage *option, stage *main){
 		} else if (key == 's' && *option == GAME) {
 			*option = MENU;
 		} else if (key == '\n') {
+			for (int y = 100 ; y < 450 ; y++){
+				for (int x = 135 ; x < 690 ; x++ ){
+					drawPixelARGB32(x, y, background_img[y*1024+x]);
+				}
+			}
 			*main = *option;
 			*option = GAME;
-			setBGcolor(1024,768,0x0);
 			return;
 		}
 		if(*option == MENU){
@@ -397,9 +390,13 @@ void pause_stage(stage *option, stage *main){
 void draw_arrow(int offsetX, int offsetY, int erase, int arrowIdx) {
 	for (int y = 0; y < 130; y++ )
         for (int x = 0; x < 77; x++) {
-            if (erase == 1)
-                drawPixelARGB32(x+offsetX, y+offsetY, 0x0);
-            else drawPixelARGB32(x+offsetX, y+offsetY, arrow[arrowIdx][y*77+x]);
+            if (erase)
+                drawPixelARGB32(x+offsetX, y+offsetY, background_img[(y+offsetY)*1024+(x+offsetX)]);
+            else {
+            	if (arrow[arrowIdx][y*77+x] == 0)
+            		drawPixelARGB32(x+offsetX, y+offsetY, background_img[(y+offsetY)*1024+(x+offsetX)]);
+            	else drawPixelARGB32(x+offsetX, y+offsetY, arrow[arrowIdx][y*77+x]);
+            }
         }
 }
 
@@ -407,6 +404,9 @@ void draw_button(int offsetY,int buttonIdx){
 	int width=button_width[buttonIdx];
 	int offsetX = (1024-width)/2;
 	for (int y = 0; y < 130; y++ )
-		for (int x = 0; x < width; x++)
-			drawPixelARGB32(x+offsetX, y+offsetY, button_array[buttonIdx][y*width+x]);
+		for (int x = 0; x < width; x++){
+			if (button_array[buttonIdx][y*width+x] == 0)
+				drawPixelARGB32(x+offsetX, y+offsetY, background_img[(y+offsetY)*1024+(x+offsetX)]);
+			else drawPixelARGB32(x+offsetX, y+offsetY, button_array[buttonIdx][y*width+x]);
+		}
 }
