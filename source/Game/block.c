@@ -27,7 +27,7 @@ void draw_block(struct Block *self) {
 void remove_block(struct Block *self) {
 	for (int y = 0; y < self->height; y++){
 		for (int x = 0; x < self->width; x++)
-			drawPixelARGB32(x + self->x, y + self->y, background_img[(int)(x + self->x)*1024+(int)(y + self->y)]);
+			drawPixelARGB32(x + self->x, y + self->y, background_img[(int)(y + self->y)*1024+(int)(x + self->x)]);
 	}
 }
 

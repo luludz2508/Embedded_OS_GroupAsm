@@ -47,7 +47,7 @@ void draw_ball(struct Ball *self){
 		for(int x = -r; x <= r ; x++){
 		    float next_x= x - x_velocity;
 		    float next_y= y - y_velocity;
-			if ( ( x*x + y*y < (r+1)*(r+1) ) && ( next_x*next_x + next_y*next_y > (r-2)*(r-2) ) ){
+			if ( ( x*x + y*y < (r+1)*(r+1) ) && ( next_x*next_x + next_y*next_y > r*r ) ){
 				drawPixelARGB32((int)(x + ball_x), (int)(y + ball_y), background_img[(int)(y + ball_y)*1024+(int)(x + ball_x)]);
             }
         }
