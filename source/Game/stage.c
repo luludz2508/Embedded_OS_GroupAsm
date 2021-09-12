@@ -6,6 +6,7 @@
 #include "paddle.h"
 #include "background_image.h"
 
+void toast_winner(int winner);
 // [block index][0:x, 1:y]
 int block_layout[64][2] = {{0}};
 
@@ -299,8 +300,9 @@ void result_stage(stage *option, stage *main, int *diff) {
             drawPixelARGB32(x, y, background_img[y*1024+x]);
         }
     }
+    // draw result
 	if(left_paddle.score > right_paddle.score){
-		drawString(330, 100, 0x00FFFFFF, "Player A wins");
+		toast_winner(1);
 		draw_nums(left_paddle.score,400,200,0);
 		draw_num(0,600,200,0);
 	} else if (left_paddle.score == right_paddle.score){
@@ -310,9 +312,8 @@ void result_stage(stage *option, stage *main, int *diff) {
 	} else {
 		draw_num(0,400,200,0);
 		draw_nums(right_paddle.score,600,200,0);
-		drawString(330, 100, 0x00FFFFFF, "Player B wins");
+		toast_winner(2);
 	}
-
 
 	draw_button(300,RESTART);
 	draw_button(500,HOME);
@@ -409,4 +410,30 @@ void draw_button(int offsetY,int buttonIdx){
 				drawPixelARGB32(x+offsetX, y+offsetY, background_img[(y+offsetY)*1024+(x+offsetX)]);
 			else drawPixelARGB32(x+offsetX, y+offsetY, button_array[buttonIdx][y*width+x]);
 		}
+}
+
+void toast_winner(int winner) {
+	if(winner == 1) {
+		for (int y = 0; y < 40; y++ )
+			for (int x = 0; x < 535; x++){
+				if (p1[y*535+x] == 0)
+					drawPixelARGB32(x+320, y+100, background_img[(y+100)*1024+(x+320)]);
+				else drawPixelARGB32(x+320, y+100, 0x00ffffff);
+			}
+	} else {
+		for (int y = 0; y < 40; y++ )
+			for (int x = 0; x < 535; x++){
+				if (p2[y*535+x] == 0)
+					drawPixelARGB32(x+320, y+100, background_img[(y+100)*1024+(x+320)]);
+				else drawPixelARGB32(x+320, y+100, 0x00ffffff);
+			}
+	}
+	//draw trophy
+	for (int y = 0 ; y < 85 ; y++){
+		for (int x = 0 ; x <80 ; x++ ){
+			if (trophy[y*80+x] == 0x00ffffff)
+				drawPixelARGB32(x+190, y+80, background_img[(y+80)*1024+(x+190)]);
+			else drawPixelARGB32(x+190, y+80, trophy[y*80+x]);
+		}
+	}
 }
