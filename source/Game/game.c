@@ -18,6 +18,7 @@
 #endif
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag);
+
 void wait_msec(unsigned int n)
 {
     register unsigned long f, t, r;
@@ -87,9 +88,19 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
 
         // Change current player when ball hit paddle
         if (pad->name != ball->current_player){
-        	ball->current_player = pad->name;
+        	uart_puts("\nchange player");
 			// Reset streaks
+        	if (ball->current_player == 'A') {
+				draw_nums(ball->streak, 240, 20, 1);
+				draw_nums(0, 240, 20, 0);
+        	} else {
+        		draw_nums(ball->streak, 840, 20, 1);
+        		draw_nums(0, 840, 20, 0);
+        	}
 			ball->streak = 0;
+			//change name
+        	ball->current_player = pad->name;
+
         }
 
         // ball hit right side of paddle
@@ -228,18 +239,26 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				remove_block(&block);
 
 				// Scoring
-				ball->streak += 1;
+
 				if (ball->current_player == 'A') {
 					draw_frame(padA->score);
-			        //erase then draw score
+			        //erase then draw score & streak
 			        draw_nums(padA->score, 100, 20, 1);
+			        draw_nums(ball->streak, 240, 20, 1);
+
+			        ball->streak += 1;
 					padA->score += ball->streak;
 					draw_nums(padA->score, 100, 20, 0);
+					draw_nums(ball->streak, 240, 20, 0);
 				} else{
 					draw_frame(padB->score);
-					draw_nums(padB->score, 800, 20, 1);
+					draw_nums(padB->score, 700, 20, 1);
+					draw_nums(ball->streak, 840, 20, 1);
+
+					ball->streak += 1;
 					padB->score += ball->streak;
-					draw_nums(padB->score, 800, 20, 0);
+					draw_nums(padB->score, 700, 20, 0);
+					draw_nums(ball->streak, 840, 20, 0);
 				}
 
 				flag = flag_x + flag_y;
@@ -293,21 +312,38 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag) {
 	// ball hit right wall => B loses 3 points
 		if (ball->x + ball->radius >= 1013) {
+			//reset streak
+			if (ball->current_player == 'A') {
+				draw_nums(ball->streak, 240, 20, 1);
+				draw_num(0, 240, 20, 0);
+			} else {
+				draw_nums(ball->streak, 840, 20, 1);
+				draw_num(0, 840, 20, 0);
+			}
 			ball->streak = 0;
+
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
 			else ball->angle = 540 - ball->angle;
 
-			draw_nums(padB->score, 800, 20, 1);
+			draw_nums(padB->score, 700, 20, 1);
 			padB->score-=3;
-			draw_nums(padB->score, 800, 20, 0);
+			draw_nums(padB->score, 700, 20, 0);
 			if (padB->score <= 0)
 				return 0;
 		}
 
 		// ball hit left wall => A loses 3 points
 		if (ball->x - ball->radius <= 11) {
+			if (ball->current_player == 'A') {
+				draw_nums(ball->streak, 240, 20, 1);
+				draw_num(0, 240, 20, 0);
+			} else {
+				draw_nums(ball->streak, 840, 20, 1);
+				draw_num(0, 840, 20, 0);
+			}
 			ball->streak = 0;
+
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
 			else ball->angle =540 - ball->angle;

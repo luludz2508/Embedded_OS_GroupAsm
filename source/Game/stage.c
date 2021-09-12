@@ -7,6 +7,8 @@
 #include "background_image.h"
 
 void toast_winner(int winner);
+void draw_streaks();
+
 // [block index][0:x, 1:y]
 int block_layout[64][2] = {{0}};
 
@@ -22,6 +24,16 @@ char input, key_down_A, key_down_B;
 int count_loop_A = 0;
 int count_loop_B = 0;
 
+void draw_streaks() {
+	for (int y = 0; y < 45; y++ )
+		for (int x = 0; x < 28; x++){
+			if (flame[y*28+x] != 0x00ffffff){
+		    	drawPixelARGB32(x+200, y+10, flame[y*28+x]); //playerA
+		    	drawPixelARGB32(x+800, y+10, flame[y*28+x]); //playerB
+			}
+		}
+}
+
 void count_down() {
 	// draw background image
 	for (int y = 0 ; y < 768 ; y++){
@@ -33,8 +45,12 @@ void count_down() {
 	draw_paddle(&left_paddle);
 	draw_paddle(&right_paddle);
 	//score
-	draw_nums(right_paddle.score, 800, 20, 0);
+	draw_nums(right_paddle.score, 700, 20, 0);
 	draw_nums(left_paddle.score, 100, 20, 0);
+	//streak
+	draw_streaks();
+	draw_num(ball1.streak, 240, 20, 0);
+	draw_num(ball2.streak, 840, 20, 0);
 	//frame
 	draw_frame(4);
 

@@ -213,6 +213,10 @@ void draw_num(int num, int offsetX, int offsetY, int erase) {
 }
 
 void draw_nums(int num, int offsetX, int offsetY, int erase) {
+	if (num == 0){
+		draw_num(0, offsetX, offsetY, erase);
+		return;
+	}
 	int c = 0; /* digit position */
 	int n = num;
 	while (n != 0) {
@@ -228,8 +232,6 @@ void draw_nums(int num, int offsetX, int offsetY, int erase) {
 	    n /= 10;
 	    c--;
 	}
-
-
 }
 void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 	int offsetWidth=offsetX;
