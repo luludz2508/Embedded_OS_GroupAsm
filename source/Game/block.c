@@ -64,7 +64,8 @@ void draw_map(int block_layout[][2]) {
 				block_layout[layout_index][0] = j;
 				block_layout[layout_index][1] = i;
 
-				if (layout_index % 7 == 0 || layout_index % 9 == 0)
+				if (layout_index == 7 || layout_index == 18 ||
+					layout_index == 45 || layout_index == 56)
 					draw_block(&block, 1);
 				else
 					draw_block(&block, 0);

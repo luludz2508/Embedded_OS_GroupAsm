@@ -233,7 +233,8 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				block.width = BRICK_WIDTH;
 				block.height = BRICK_HEIGHT;
 
-				if (i % 7 != 0 && i % 9 != 0) {
+				if (!(i == 7 || i == 18 ||
+					i == 45 || i == 56)) {
 					// Delete from block layout
 					block_layout[i][0] = -1;
 					block_layout[i][1] = -1;
