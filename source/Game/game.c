@@ -18,6 +18,7 @@
 #endif
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag);
+const static int unbreakable_blocks[]={7 ,18 ,45 ,56};
 
 void wait_msec(unsigned int n)
 {
@@ -108,10 +109,9 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
             ball->x = pad->x + pad->width/2 + ball->radius;
             if (ball->angle<=180){
                     ball->angle = 180 - ball->angle + ratio*modify_angle ;
-                }
-            else{
-                    ball->angle =540 - ball->angle + ratio*modify_angle ;
-                }
+            } else {
+                ball->angle =540 - ball->angle + ratio*modify_angle ;
+            }
             uart_puts(" - Angle After: ");
             uart_dec((int)( ball->angle));
         }
@@ -165,7 +165,6 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
     }
 
 }
-
 int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddle *padA, struct Paddle *padB) {
 	// Ball x and y
 	int ball_x = ball->x;
@@ -240,32 +239,43 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 					block_layout[i][1] = -1;
 					// Remove on screen
 					remove_block(&block);
+
+
+                    // Scoring
+                    if (ball->current_player == 'A') {
+                        draw_frame(padA->score);
+                        //erase then draw score & streak
+                        draw_nums(padA->score, 100, 20, 1);
+                        draw_nums(ball->streak, 240, 20, 1);
+
+                        ball->streak += 1;
+                        padA->score += ball->streak;
+                        draw_nums(padA->score, 100, 20, 0);
+                        draw_nums(ball->streak, 240, 20, 0);
+                    } else{
+                        draw_frame(padB->score);
+                        draw_nums(padB->score, 700, 20, 1);
+                        draw_nums(ball->streak, 840, 20, 1);
+
+                        ball->streak += 1;
+                        padB->score += ball->streak;
+                        draw_nums(padB->score, 700, 20, 0);
+                        draw_nums(ball->streak, 840, 20, 0);
+                    }
 				}
-
-				// Scoring
-				if (ball->current_player == 'A') {
-					draw_frame(padA->score);
-			        //erase then draw score & streak
-			        draw_nums(padA->score, 100, 20, 1);
-			        draw_nums(ball->streak, 240, 20, 1);
-
-			        ball->streak += 1;
-					padA->score += ball->streak;
-					draw_nums(padA->score, 100, 20, 0);
-					draw_nums(ball->streak, 240, 20, 0);
-				} else{
-					draw_frame(padB->score);
-					draw_nums(padB->score, 700, 20, 1);
-					draw_nums(ball->streak, 840, 20, 1);
-
-					ball->streak += 1;
-					padB->score += ball->streak;
-					draw_nums(padB->score, 700, 20, 0);
-					draw_nums(ball->streak, 840, 20, 0);
-				}
+                // Draw unbreakable block
+                for(int i=0; i<4;i++){
+                    block.x = block_layout[unbreakable_blocks[i]][0];
+                    block.y = block_layout[unbreakable_blocks[i]][1];
+                    block.width = BRICK_WIDTH;
+                    block.height = BRICK_HEIGHT;
+                    draw_block(&block, 1);
+                }
 
 				flag = flag_x + flag_y;
 			}
+
+
 		}
 	}
 
@@ -364,7 +374,7 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 		}
 
 		// ball hit top
-		if (ball->y - ball->radius <= 55 || flag == 12) {
+		if (ball->y - ball->radius <= 75 || flag == 12) {
 			ball->angle = 360 - ball->angle;
 		}
 		return 1;

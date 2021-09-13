@@ -17,8 +17,8 @@ struct Ball ball1 = {100, 100, 9, 0.5, 90, 0, 'A'};
 struct Ball ball2 = {700, 100, 9, 0.5, 120, 0, 'B'};
  
 // player name, x, y, width, height, speed, score
-struct Paddle left_paddle = {'A', 34, 45, 20, 90, 25, 0};
-struct Paddle right_paddle = {'B', 989, 45, 20, 90, 25, 0};
+struct Paddle left_paddle = {'A', 34, 90, 20, 90, 25, 0};
+struct Paddle right_paddle = {'B', 989, 100, 20, 90, 25, 0};
 
 char input, key_down_A, key_down_B;
 int count_loop_A = 0;
@@ -243,6 +243,8 @@ void game_stage(stage *main) {
 	draw_map(block_layout);
 
 	while (1) {
+
+
 		// Get player input
 		input = getUart();
 

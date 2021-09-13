@@ -5,6 +5,21 @@
 #include "block.h"
 #include "paddle_image.h"
 
+void init_paddles(struct Paddle *p1, struct Paddle *p2) {
+	// Paddle 1
+	p1->x = 22;
+	p1->y = 112;
+	p1->speed = 50;
+	p1->score = 20;
+
+	// Paddle 2
+	p2->x = 1002;
+	p2->y = 112;
+	p2->speed = 50;
+	p2->score = 20;
+}
+
+
 void draw_paddle_image(struct Paddle *self){
 	int half_width = self->width/2;
 	int half_height = self->height/2;
@@ -37,7 +52,7 @@ void draw_paddle(struct Paddle *self){
 }
 
 void move_paddle(struct Paddle *self, char key){
-    if ((key== 'w' || key== 'i') && (self->y - self->height/2 - absolute(self->speed) >= 0)){
+    if ((key== 'w' || key== 'i') && (self->y - self->height/2 - absolute(self->speed) >= 55)){
         if (self->speed > 0){
             self->speed = -self->speed;
         }
@@ -51,18 +66,3 @@ void move_paddle(struct Paddle *self, char key){
 
 	draw_paddle(self);
 }
-
-void init_paddles(struct Paddle *p1, struct Paddle *p2) {
-	// Paddle 1
-	p1->x = 20;
-	p1->y = 45;
-	p1->speed = 50;
-	p1->score = 20;
-
-	// Paddle 2
-	p2->x = 1004;
-	p2->y = 45;
-	p2->speed = 50;
-	p2->score = 20;
-}
-

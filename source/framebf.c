@@ -255,10 +255,17 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 
 void draw_frame(int score) {
 	int color[] = {0x004bcc83, 0x00ad1342, 0x007700a6, 0x001f4e91, 0x00defe47};
+
 	unsigned int attr = color[score%5];
+
 	//top left bottom right
-	 drawRectARGB32(0, 0, 1024, 10, attr, 1);
-	 drawRectARGB32(0, 0, 10, 768, attr, 1);
-	 drawRectARGB32(0, 758, 1024, 768, attr, 1);
-	 drawRectARGB32(1014, 0, 1024, 768, attr, 1);
+    drawRectARGB32(0, 0, 1024, 10, attr, 1);
+    drawRectARGB32(0, 0, 10, 768, attr, 1);
+    drawRectARGB32(0, 758, 1024, 768, attr, 1);
+    drawRectARGB32(1014, 0, 1024, 768, attr, 1);
+
+    //Drawline of score box
+    drawLineARGB32(10, 55, 1014,55 ,attr);
+    drawRectARGB32(0, 55 , 1024, 65, attr, 1);
+
 }
