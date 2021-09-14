@@ -6,6 +6,7 @@
 #include "stage.h"
 #include "block.h"
 #include "background_image.h"
+#include "welcome_image.h"
 
 #ifndef BRICK_WIDTH
 #define BRICK_WIDTH 23
@@ -396,6 +397,13 @@ void game_run() {
 	stage option = GAME;
 	int mode = 0, diff = 0;
 
+    //Print out welcome image
+    for(int y=0; y< 768; y++){
+        for (int x=0; x<1024; x++){
+            drawPixelARGB32(x, y, welcome_img [y*1024+x]);
+        }
+    }
+    wait_msec(2000000);
 	while (1) {
 		switch(cur_stage) {
 			case MENU: {
