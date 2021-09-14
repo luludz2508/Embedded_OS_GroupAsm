@@ -322,13 +322,13 @@ void result_stage(stage *option, stage *main, int *diff) {
 	if(left_paddle.score > right_paddle.score){
 		toast_winner(1);
 		draw_nums(left_paddle.score,400,200,0);
-		draw_num(0,600,200,0);
+		draw_nums(right_paddle.score,600,200,0);
 	} else if (left_paddle.score == right_paddle.score){
 		drawString(550, 100, 0x00FFFFFF, "tie game");
 		draw_num(0,400,200,0);
 		draw_num(0,600,200,0);
 	} else {
-		draw_num(0,400,200,0);
+		draw_nums(left_paddle.score,400,200,0);
 		draw_nums(right_paddle.score,600,200,0);
 		toast_winner(2);
 	}
