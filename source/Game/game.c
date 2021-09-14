@@ -373,8 +373,10 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 			draw_nums(padA->score, 100, 20, 1);
 			padA->score-=3;
 			draw_nums(padA->score, 100, 20, 0);
-			if (padA->score <= 0)
+			if (padA->score <= 0){
+			    padA->score=0;
 				return 0;
+		    }
 		}
 
 		// ball hit bottom
