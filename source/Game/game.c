@@ -18,8 +18,13 @@
 #define MAX_BLOCKS 64
 #endif
 
+#ifndef INIT_BREAKABLE_BLOCK
+#define INIT_BREAKABLE_BLOCK 60
+#endif
+
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag);
 const static int unbreakable_blocks[]={7 ,18 ,45 ,56};
+int destroyed_block=INIT_BREAKABLE_BLOCK;
 
 void wait_msec(unsigned int n)
 {
@@ -233,8 +238,11 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				block.width = BRICK_WIDTH;
 				block.height = BRICK_HEIGHT;
 
-				if (!(i == 7 || i == 18 ||
-					i == 45 || i == 56)) {
+				if (!(i == 7 || i == 18 || i == 45 || i == 56)) {
+				    //Decrease number of block left
+				    destroyed_block--;
+				    uart_puts("\nNumber of blocks: ");
+				    uart_dec(destroyed_block);
 					// Delete from block layout
 					block_layout[i][0] = -1;
 					block_layout[i][1] = -1;
@@ -291,7 +299,7 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 		ball->angle = 180 - ball->angle;
 	}
 
-	if (!check_collision_edge(ball, padA, padB, flag))
+	if (!check_collision_edge(ball, padA, padB, flag) || destroyed_block == 0)
 		return 0;
 
 	if(ball->angle >= 360){
@@ -415,6 +423,7 @@ void game_run() {
 				break;
 			}
 			case GAME: {
+			    destroyed_block =  60;
 				game_stage(&cur_stage);
 				break;
 			}
