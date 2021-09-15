@@ -1,7 +1,8 @@
 //-----------------------------------framebf.c-------------------------------------
-#include "alphabet_lowercase.h"
-#include "alphabet_uppercase.h"
-#include "number.h"
+#include "Font/alphabet_lowercase.h"
+#include "Font/alphabet_uppercase.h"
+#include "Font/number.h"
+#include "Image/image.h"
 #include "mbox.h"
 #include "uart.h"
 #include "Game/background_image.h"
@@ -268,4 +269,49 @@ void draw_frame(int score) {
     drawLineARGB32(10, 55, 1014,55 ,attr);
     drawRectARGB32(0, 55 , 1024, 65, attr, 1);
 
+}
+
+void drawBackground() {
+	for (int y = 0; y < 600; y++) {
+		for (int x = 0; x < 800; x++) {
+			drawPixelARGB32(x, y, background[y*800 + x]);
+		}
+	}
+
+	for (int y = 200; y < 400; y++) {
+		for (int x = 250; x < 550; x++) {
+			drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
+		}
+	}
+
+	char c = 0;
+	int current_y = 0;
+	int step = 40;
+
+	while(1) {
+		c = uart_getc();
+		if (c == 's' && (current_y <= 1400 - 600 - step)) {
+			current_y += step;
+			for (int y = 0; y < 600; y++) {
+				for (int x = 0; x < 800; x++) {
+					drawPixelARGB32(x, y, background[(y + current_y)*800 + x]);
+				}
+			}
+		}
+
+		if (c == 'w' && (current_y >= step)) {
+			current_y -= step;
+			for (int y = 0; y < 600; y++) {
+				for (int x = 0; x < 800; x++) {
+					drawPixelARGB32(x, y, background[(y + current_y)*800 + x]);
+				}
+			}
+		}
+
+		for (int y = 200; y < 400; y++) {
+			for (int x = 250; x < 550; x++) {
+				drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
+			}
+		}
+	}
 }

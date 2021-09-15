@@ -10,3 +10,4 @@ void draw_num(int num, int offsetX, int offsetY, int erase);
 void draw_nums(int num, int offsetX, int offsetY, int erase);
 void drawString(int offsetX, int offsetY,unsigned int attr, char* string);
 void draw_frame(int score);
+void drawBackground();
