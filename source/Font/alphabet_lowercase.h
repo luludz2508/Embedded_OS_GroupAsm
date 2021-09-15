@@ -1,9 +1,9 @@
 //Width of each lowercase character
-int alphabet_lowercase_width[26]={29,30,28,30,30,27,29,30,7,17,28,7,52,30,34,31,31,20,24,23,29,33,55,32,33,27,};
+static const int alphabet_lowercase_width[26]={29,30,28,30,30,27,29,30,7,17,28,7,52,30,34,31,31,20,24,23,29,33,55,32,33,27,};
 
 // Height is 64pixel
 //Width is depended
-unsigned int alphabet_lowercase[26][3520]={
+static const unsigned int alphabet_lowercase[26][3520]={
 		{		//a 29
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

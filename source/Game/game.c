@@ -90,25 +90,22 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
     if (width_dist <= (float)(ball->radius * ball->radius)) {
         float ratio= (ball->y - pad->y)/(pad->height/2);
         int modify_angle=50;
-        uart_puts("\nAngle Before: ");
-        uart_dec((int)( ball->angle));
 
         // Change current player when ball hit paddle
         if (pad->name != ball->current_player){
-        	uart_puts("\nchange player");
-			// Reset streaks
-        	if (ball->current_player == 'A') {
-				draw_nums(ball->streak, 240, 20, 1);
-				draw_nums(0, 240, 20, 0);
-        	} else {
-        		draw_nums(ball->streak, 840, 20, 1);
-        		draw_nums(0, 840, 20, 0);
-        	}
-			ball->streak = 0;
 			//change name
         	ball->current_player = pad->name;
-
         }
+        // reset streak when bounce paddle
+        // Reset streaks
+        if (ball->current_player == 'A') {
+            draw_nums(ball->streak, 240, 20, 1);
+            draw_nums(0, 240, 20, 0);
+        } else {
+            draw_nums(ball->streak, 840, 20, 1);
+            draw_nums(0, 840, 20, 0);
+        }
+        ball->streak = 0;
 
         // ball hit right side of paddle
         if ( flag == 23) {
@@ -118,8 +115,6 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
             } else {
                 ball->angle =540 - ball->angle + ratio*modify_angle ;
             }
-            uart_puts(" - Angle After: ");
-            uart_dec((int)( ball->angle));
         }
 
         // ball hit left side of paddle
@@ -129,9 +124,6 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
                 ball->angle = 180 - ball->angle - ratio*modify_angle ;
             else
                 ball->angle =540 - ball->angle - ratio*modify_angle ;
-
-            uart_puts(" - Angle After: ");
-            uart_dec((int)( ball->angle));
         }
 
         // ball hit bottom
@@ -223,7 +215,6 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 			// check y: after block
 			else if (ball_y > block_layout[i][1] + BRICK_HEIGHT) {
-//				uart_puts("\nline 155\n");
 				dist_y = ball_y - (block_layout[i][1] + BRICK_HEIGHT);
 				flag_y = 30;
 			}
@@ -241,8 +232,6 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 				if (!(i == 7 || i == 18 || i == 45 || i == 56)) {
 				    //Decrease number of block left
 				    destroyed_block--;
-				    uart_puts("\nNumber of blocks: ");
-				    uart_dec(destroyed_block);
 					// Delete from block layout
 					block_layout[i][0] = -1;
 					block_layout[i][1] = -1;
@@ -351,8 +340,10 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 			draw_nums(padB->score, 700, 20, 1);
 			padB->score-=3;
 			draw_nums(padB->score, 700, 20, 0);
-			if (padB->score <= 0)
+			if (padB->score <= 0) {
+                padB->score = 0;
 				return 0;
+            }
 		}
 
 		// ball hit left wall => A loses 3 points
@@ -368,13 +359,14 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 
 			if (ball->angle<=180)
 				ball->angle = 180 - ball->angle;
-			else ball->angle =540 - ball->angle;
+			else
+			    ball->angle =540 - ball->angle;
 
 			draw_nums(padA->score, 100, 20, 1);
 			padA->score-=3;
 			draw_nums(padA->score, 100, 20, 0);
 			if (padA->score <= 0){
-			    padA->score=0;
+			    padA->score = 0;
 				return 0;
 		    }
 		}

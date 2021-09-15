@@ -1,10 +1,15 @@
 #include "uart.h"
 #include "mbox.h"
 #include "framebf.h"
-#include "main.h"
+
+#include "Font/font.h"
+#include "Video/video.h"
+#include "Image/image.h"
+#include "Game/paddle.h"
+#include "Game/ball.h"
 #include "Game/game.h"
 
-#define task 3
+#define task 4
 
 int main() {
     #if task == 1

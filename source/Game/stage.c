@@ -1,8 +1,10 @@
 #include "stage.h"
+#include "stage_image.h"
 #include "ball.h"
 #include "../uart.h"
 #include "../framebf.h"
 #include "block.h"
+#include "block_image.h"
 #include "paddle.h"
 #include "background_image.h"
 #include "game.h"
@@ -324,15 +326,15 @@ void result_stage(stage *option, stage *main, int *diff) {
 		toast_winner(1);
 		draw_nums(left_paddle.score,400,200,0);
 		draw_nums(right_paddle.score,600,200,0);
-	} else if (left_paddle.score == right_paddle.score){
-		drawString(550, 100, 0x00FFFFFF, "tie game");
-		draw_num(0,400,200,0);
-		draw_num(0,600,200,0);
-	} else {
+	} else if (left_paddle.score < right_paddle.score){
+        toast_winner(2);
 		draw_nums(left_paddle.score,400,200,0);
 		draw_nums(right_paddle.score,600,200,0);
-		toast_winner(2);
-	}
+	} else if (left_paddle.score == right_paddle.score){
+        drawString(550, 100, 0x00FFFFFF, "tie game");
+        draw_num(0,400,200,0);
+        draw_num(0,600,200,0);
+    }
 
 	draw_button(300,RESTART);
 	draw_button(500,HOME);

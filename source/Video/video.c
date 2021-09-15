@@ -1,6 +1,6 @@
-#include "framebf.h"
-#include "uart.h"
-#include "mbox.h"
+#include "../framebf.h"
+#include "../uart.h"
+#include "../mbox.h"
 #include "video.h"
 #include "video_source.h"
 void video(){

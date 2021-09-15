@@ -10,16 +10,16 @@ const float PI=3.14159;
 void init_ball(struct Ball *self1, struct Ball *self2, int speed) {
 	self1->current_player = 'A';
 	self1->x = 300;
-	self1->y = 100;
+	self1->y = 362;
 	self1->speed = speed + 1 ;
-	self1->angle = 120;
+	self1->angle = 180;
 	self1->streak = 0;
 
 	self2->current_player = 'B';
 	self2->x = 700;
-	self2->y = 100;
+	self2->y = 362;
 	self2->speed = speed + 1 ;
-	self2->angle = 120;
+	self2->angle = 0;
 	self2->streak = 0;
 
 }

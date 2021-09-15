@@ -8,15 +8,15 @@
 void init_paddles(struct Paddle *p1, struct Paddle *p2) {
 	// Paddle 1
 	p1->x = 22;
-	p1->y = 112;
+	p1->y = 362;
 	p1->speed = 50;
-	p1->score = 0;
+	p1->score = 5;
 
 	// Paddle 2
 	p2->x = 1002;
-	p2->y = 112;
+	p2->y = 362;
 	p2->speed = 50;
-	p2->score = 0;
+	p2->score = 5;
 }
 
 
@@ -43,12 +43,6 @@ void draw_paddle(struct Paddle *self){
 
 	self->y+=(self->speed);
     draw_paddle_image(self);
-
-	for (int y = -3; y < 4; y++){
-		for (int x = -3; x < 4; x++){
-			drawPixelARGB32(x + self->x, y + self->y, 0x0000FF);
-		}
-	}
 }
 
 void move_paddle(struct Paddle *self, char key){

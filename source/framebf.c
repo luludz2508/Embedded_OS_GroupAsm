@@ -249,15 +249,13 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 		if(*string>='a'&&*string<='z'){
 			drawChar_lower(offsetWidth,offsetY,attr,*string-'a');
 			offsetWidth +=alphabet_lowercase_width[*string-'a']+7;
-		} else
-		if(*string>='A'&&*string<='Z'){
+		} else if(*string>='A'&&*string<='Z'){
             drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
             offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
         } else if(*string>='0'&&*string<='9'){
             drawChar_number(offsetWidth,offsetY,attr,*string-'0');
             offsetWidth +=number_img_width[*string-'0']+7;
-        } else
-		if(*string==' '){
+        } else if(*string==' '){
 			offsetWidth += 7*3;
 		}
 		string++;

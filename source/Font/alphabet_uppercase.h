@@ -1,13 +1,11 @@
-
-
 // Width of each UPPERCASE char
-int alphabet_uppercase_width[26]={
+static const int alphabet_uppercase_width[26]={
 		40,29,36,37,36,24,36,36,20,18,33,23,45,40,43,27,45,31,27,34,35,40,64,38,35,31
 };
 
 // Height is 64pixel
 //Width is depended
-unsigned int alphabet_uppercase[26][4096]={ // 31x64
+static const unsigned int alphabet_uppercase[26][4096]={ // 31x64
 		{//A 40
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
