@@ -6,7 +6,7 @@
 #include "Video/video.h"
 #include "Game/game.h"
 
-#define task 4
+#define task 3
 
 int main() {
     #if task == 1

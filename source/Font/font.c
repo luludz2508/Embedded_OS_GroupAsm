@@ -7,4 +7,5 @@ void font(){
 	drawString(50,64, 0x00ffffff,"Phuc Nguyen");
 	drawString(50,128, 0x00ffffff,"Ha Phan");
 	drawString(50,192, 0x00ffffff,"Luan Nguyen");
+	drawString(50,256, 0x00ffffff,"0123456789");
 }

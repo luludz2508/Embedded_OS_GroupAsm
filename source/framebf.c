@@ -182,7 +182,16 @@ void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
 		}
 	}
 }
-
+void drawChar_number(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=number_img_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(number_img[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
 void draw_num(int num, int offsetX, int offsetY, int erase) {
 	//31x32
 	if (num > 0 && num < 6) {
@@ -242,9 +251,12 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 			offsetWidth +=alphabet_lowercase_width[*string-'a']+7;
 		} else
 		if(*string>='A'&&*string<='Z'){
-			drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
-			offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
-		} else
+            drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
+            offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
+        } else if(*string>='0'&&*string<='9'){
+            drawChar_number(offsetWidth,offsetY,attr,*string-'0');
+            offsetWidth +=number_img_width[*string-'0']+7;
+        } else
 		if(*string==' '){
 			offsetWidth += 7*3;
 		}
