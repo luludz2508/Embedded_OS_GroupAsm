@@ -4,8 +4,9 @@
 #include "main.h"
 #include "Game/game.h"
 
-void main() {
+int main() {
 	game_run();
+	return 0;
 }
 
 
