@@ -3,8 +3,12 @@
 #include "../framebf.h"
 #include "image.h"
 
-// set up serial console
-void image(){
+void display_image(){
 	framebf_init(800, 600, 800, 600);
-	drawBackground();
+	drawImage();
+}
+
+void display_background() {
+	framebf_init(800, 600, 800, 600);
+    drawBackground();
 }

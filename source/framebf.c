@@ -1,6 +1,7 @@
 //-----------------------------------framebf.c-------------------------------------
 #include "Font/alphabet_lowercase.h"
 #include "Font/alphabet_uppercase.h"
+#include "Font/alphabet_symbol.h"
 #include "Font/number.h"
 #include "Image/image.h"
 #include "mbox.h"
@@ -192,6 +193,46 @@ void drawChar_number(int offsetX, int offsetY,unsigned int attr,int charIndex){
 		}
 	}
 }
+void drawChar_symbol33_47(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=symbol_img_width33_47[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(symbol_img33_47[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawChar_symbol58_64(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=symbol_img_width58_64[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(symbol_img58_64[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawChar_symbol91_96(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=symbol_img_width91_96[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(symbol_img91_96[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
+void drawChar_symbol123_126(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=symbol_img_width123_126[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(symbol_img123_126[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
 void draw_num(int num, int offsetX, int offsetY, int erase) {
 	//31x32
 	if (num > 0 && num < 6) {
@@ -255,6 +296,18 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
         } else if(*string>='0'&&*string<='9'){
             drawChar_number(offsetWidth,offsetY,attr,*string-'0');
             offsetWidth +=number_img_width[*string-'0']+7;
+        } else if(*string>=33&&*string<=47){
+            drawChar_symbol33_47(offsetWidth,offsetY,attr,*string-33);
+            offsetWidth +=symbol_img_width33_47[*string-33]+7;
+        } else if(*string>=58&&*string<=64){
+            drawChar_symbol58_64(offsetWidth,offsetY,attr,*string-58);
+            offsetWidth +=symbol_img_width58_64[*string-58]+7;
+        } else if(*string>=91&&*string<=96){
+            drawChar_symbol91_96(offsetWidth,offsetY,attr,*string-91);
+            offsetWidth +=symbol_img_width91_96[*string-91]+7;
+        } else if(*string>=123&&*string<=126){
+            drawChar_symbol123_126(offsetWidth,offsetY,attr,*string-123);
+            offsetWidth +=symbol_img_width123_126[*string-123]+7;
         } else if(*string==' '){
 			offsetWidth += 7*3;
 		}
@@ -281,16 +334,18 @@ void draw_frame(int score) {
 
 }
 
+void drawImage() {
+	for (int y = 200; y < 400; y++) {
+		for (int x = 250; x < 550; x++) {
+			drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
+		}
+	}
+}
+
 void drawBackground() {
 	for (int y = 0; y < 600; y++) {
 		for (int x = 0; x < 800; x++) {
 			drawPixelARGB32(x, y, background[y*800 + x]);
-		}
-	}
-
-	for (int y = 200; y < 400; y++) {
-		for (int x = 250; x < 550; x++) {
-			drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
 		}
 	}
 
@@ -315,12 +370,6 @@ void drawBackground() {
 				for (int x = 0; x < 800; x++) {
 					drawPixelARGB32(x, y, background[(y + current_y)*800 + x]);
 				}
-			}
-		}
-
-		for (int y = 200; y < 400; y++) {
-			for (int x = 250; x < 550; x++) {
-				drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
 			}
 		}
 	}

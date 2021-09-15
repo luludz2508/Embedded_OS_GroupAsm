@@ -9,7 +9,7 @@
 #include "Game/ball.h"
 #include "Game/game.h"
 
-#define task 4
+#define task 5
 
 int main() {
     #if task == 1
@@ -17,8 +17,10 @@ int main() {
     #elif task == 2
         video();
     #elif task == 3
-        image();
+        display_image();
     #elif task == 4
+        display_background();
+    #elif task == 5
         game_run();
     #endif
 
