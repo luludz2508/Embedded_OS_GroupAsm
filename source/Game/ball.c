@@ -55,16 +55,10 @@ void draw_ball(struct Ball *self){
 	self->x += x_velocity;
 	self->y += y_velocity;
 
-//	 mark center of ball in blue
 	for(int y = -r; y <= r; y++)
 		for(int x = -r; x <= r; x++)
 			if(x*x + y*y <= r*r && ball_image[(y + r - 1)*(2*r - 1) + x + r - 1] !=0x00ffffff)
 				drawPixelARGB32((int)(x + self->x), (int)(y + self->y), ball_image[(y + r - 1)*(2*r - 1) + x + r - 1]);
 
-//	for (int y = -3; y < 4; y++){
-//		for (int x = -3; x < 4; x++){
-//			drawPixelARGB32(x + self->x, y + self->y, 0x0000FF);
-//		}
-//	}
 }
 

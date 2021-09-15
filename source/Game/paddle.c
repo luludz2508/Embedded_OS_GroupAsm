@@ -19,7 +19,6 @@ void init_paddles(struct Paddle *p1, struct Paddle *p2) {
 	p2->score = 5;
 }
 
-
 void draw_paddle_image(struct Paddle *self){
 	int half_width = self->width/2;
 	int half_height = self->height/2;
