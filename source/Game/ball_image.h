@@ -1,4 +1,4 @@
-static const unsigned int ball_image[]={
+static unsigned int ball_image[]={
 		// '240066902_818482342198642_2224185254547934829_n', 25x25px
 		// 'ball_sprite_0', 17x17px
         0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff,

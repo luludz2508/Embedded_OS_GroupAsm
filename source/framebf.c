@@ -1,7 +1,8 @@
 //-----------------------------------framebf.c-------------------------------------
-#include "alphabet_lowercase.h"
-#include "alphabet_uppercase.h"
-#include "number.h"
+#include "Font/alphabet_lowercase.h"
+#include "Font/alphabet_uppercase.h"
+#include "Font/number.h"
+#include "Image/image.h"
 #include "mbox.h"
 #include "uart.h"
 #include "Game/background_image.h"
@@ -181,7 +182,16 @@ void drawChar_upper(int offsetX, int offsetY,unsigned int attr,int charIndex){
 		}
 	}
 }
-
+void drawChar_number(int offsetX, int offsetY,unsigned int attr,int charIndex){
+	int width=number_img_width[charIndex];
+	for(int x=0; x<width; x++){
+		for (int y=0; y<64; y++){
+			if(number_img[charIndex][y*width+x]==1){
+				drawPixelARGB32(x+offsetX, y+offsetY, attr);
+			}
+		}
+	}
+}
 void draw_num(int num, int offsetX, int offsetY, int erase) {
 	//31x32
 	if (num > 0 && num < 6) {
@@ -241,9 +251,12 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 			offsetWidth +=alphabet_lowercase_width[*string-'a']+7;
 		} else
 		if(*string>='A'&&*string<='Z'){
-			drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
-			offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
-		} else
+            drawChar_upper(offsetWidth,offsetY,attr,*string-'A');
+            offsetWidth +=alphabet_uppercase_width[*string-'A']+7;
+        } else if(*string>='0'&&*string<='9'){
+            drawChar_number(offsetWidth,offsetY,attr,*string-'0');
+            offsetWidth +=number_img_width[*string-'0']+7;
+        } else
 		if(*string==' '){
 			offsetWidth += 7*3;
 		}
@@ -268,4 +281,49 @@ void draw_frame(int score) {
     drawLineARGB32(10, 55, 1014,55 ,attr);
     drawRectARGB32(0, 55 , 1024, 65, attr, 1);
 
+}
+
+void drawBackground() {
+	for (int y = 0; y < 600; y++) {
+		for (int x = 0; x < 800; x++) {
+			drawPixelARGB32(x, y, background[y*800 + x]);
+		}
+	}
+
+	for (int y = 200; y < 400; y++) {
+		for (int x = 250; x < 550; x++) {
+			drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
+		}
+	}
+
+	char c = 0;
+	int current_y = 0;
+	int step = 40;
+
+	while(1) {
+		c = uart_getc();
+		if (c == 's' && (current_y <= 1400 - 600 - step)) {
+			current_y += step;
+			for (int y = 0; y < 600; y++) {
+				for (int x = 0; x < 800; x++) {
+					drawPixelARGB32(x, y, background[(y + current_y)*800 + x]);
+				}
+			}
+		}
+
+		if (c == 'w' && (current_y >= step)) {
+			current_y -= step;
+			for (int y = 0; y < 600; y++) {
+				for (int x = 0; x < 800; x++) {
+					drawPixelARGB32(x, y, background[(y + current_y)*800 + x]);
+				}
+			}
+		}
+
+		for (int y = 200; y < 400; y++) {
+			for (int x = 250; x < 550; x++) {
+				drawPixelARGB32(x, y, dog_and_cat[(y - 200) * 300 + (x - 250)]);
+			}
+		}
+	}
 }

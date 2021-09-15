@@ -2,13 +2,22 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "main.h"
-#include "Game/ball.h"
-#include "Game/paddle.h"
 #include "Game/game.h"
 
+#define task 3
+
 int main() {
-	game_run();
-	return 0;
+    #if task == 1
+        font();
+    #elif task == 2
+        video();
+    #elif task == 3
+        image();
+    #elif task == 4
+        game_run();
+    #endif
+
+    return 0;
 }
 
 

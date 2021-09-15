@@ -1,3 +1,4 @@
 *.o
 *.elf
 *.img
+source/Video/video_source.h
