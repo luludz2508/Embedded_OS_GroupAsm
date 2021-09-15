@@ -8,8 +8,8 @@ struct Block {
 void draw_block(struct Block *self, int color);
 void draw_map(int block_layout[][2]);
 void remove_block(struct Block *self);
-//int check_collision_block(int ball_x, int ball_y, int radius, int block_layout[][2], int *streaks);
 float absolute(float n);
+void init_blocks(int block_layout[][2]);
 
 static const unsigned int flame[] = {
 		0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff,

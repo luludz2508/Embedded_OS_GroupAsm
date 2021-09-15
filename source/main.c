@@ -2,6 +2,8 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "main.h"
+#include "Game/ball.h"
+#include "Game/paddle.h"
 #include "Game/game.h"
 
 int main() {

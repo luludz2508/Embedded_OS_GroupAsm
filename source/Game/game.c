@@ -23,7 +23,7 @@
 #endif
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag);
-const static int unbreakable_blocks[]={7 ,18 ,45 ,56};
+int unbreakable_blocks[]={7 ,18 ,45 ,56};
 int destroyed_block=INIT_BREAKABLE_BLOCK;
 
 void wait_msec(unsigned int n)

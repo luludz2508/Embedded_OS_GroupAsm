@@ -5,6 +5,7 @@
 #include "block.h"
 #include "paddle.h"
 #include "background_image.h"
+#include "game.h"
 
 void toast_winner(int winner);
 void draw_streaks();

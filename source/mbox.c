@@ -38,7 +38,7 @@ uint32_t mailbox_read(unsigned char channel)
 	/**
 	* Write to the mailbox
 	*/
-void mailbox_send(uint32_t msg, unsigned char channel)
+void mailbox_send(uint32_t msg)
 {
 	//Sending message is buffer_addr & channel number
 	// Make sure you can send mail
@@ -59,7 +59,7 @@ int mbox_call(unsigned int buffer_addr, unsigned char channel)
 	uart_sendc('\n');
 	//Prepare Data (address of Message Buffer)
 	unsigned int msg = (buffer_addr & ~0xF) | (channel & 0xF);
-	mailbox_send(msg, channel);
+	mailbox_send(msg);
 	/* now wait for the response */
 	/* is it a response to our message (same address)? */
 	if (msg == mailbox_read(channel)) {
