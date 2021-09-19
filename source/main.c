@@ -9,7 +9,7 @@
 #include "Game/ball.h"
 #include "Game/game.h"
 
-#define task 5
+#define task 1
 
 int main() {
     #if task == 1

@@ -312,9 +312,7 @@ void drawString(int offsetX, int offsetY,unsigned int attr, char* string){
 			offsetWidth += 7*3;
 		}
 		string++;
-
 	}
-
 }
 
 void draw_frame(int score) {

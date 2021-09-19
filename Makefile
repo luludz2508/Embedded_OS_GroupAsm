@@ -23,7 +23,7 @@ VIDEOOFILES = $(VIDEOCFILES:$(VIDEO_DIR)/%.c=$(BUILD_DIR)/%.o)
 CFLAGS = -W -Wall -g3  -O3  #-ffreestanding -nostdinc  -nostdlib -nostartfiles
 LDFLAGS =  -nostartfiles  -nostdlib 
 
-all: clean kernel8.img run
+all: clean kernel8.img music run
 
 $(BUILD_DIR)/start.o: $(SRC_DIR)/start.S
 	aarch64-none-elf-gcc  -c $< -o $@

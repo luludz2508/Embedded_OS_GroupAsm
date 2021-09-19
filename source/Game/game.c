@@ -24,7 +24,7 @@
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag);
 int unbreakable_blocks[]={7 ,18 ,45 ,56};
-int destroyed_block=INIT_BREAKABLE_BLOCK;
+int remained_block=INIT_BREAKABLE_BLOCK;
 
 void wait_msec(unsigned int n)
 {
@@ -231,14 +231,12 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 
 				if (!(i == 7 || i == 18 || i == 45 || i == 56)) {
 				    //Decrease number of block left
-				    destroyed_block--;
+				    remained_block--;
 					// Delete from block layout
 					block_layout[i][0] = -1;
 					block_layout[i][1] = -1;
 					// Remove on screen
 					remove_block(&block);
-
-
                     // Scoring
                     if (ball->current_player == 'A') {
                         draw_frame(padA->score);
@@ -288,7 +286,7 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 		ball->angle = 180 - ball->angle;
 	}
 
-	if (!check_collision_edge(ball, padA, padB, flag) || destroyed_block == 0)
+	if (!check_collision_edge(ball, padA, padB, flag) || remained_block == 0)
 		return 0;
 
 	if(ball->angle >= 360){
@@ -417,7 +415,6 @@ void game_run() {
 				break;
 			}
 			case GAME: {
-			    destroyed_block =  60;
 				game_stage(&cur_stage);
 				break;
 			}
@@ -434,6 +431,7 @@ void game_run() {
 				break;
 			}
 			case RESULT:{
+				remained_block =  INIT_BREAKABLE_BLOCK;
 				result_stage(&option, &cur_stage,&diff);
 				break;
 			}
