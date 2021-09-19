@@ -46,38 +46,38 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
     float dist_y = ball->y - pad->y - pad->height/2;
     int flag_x = 0, flag_y = 0;
 
-    // check x: ball hit left of block
+    // check x: ball hit left of paddle
     if (ball->x < pad->x - pad->width/2) {
     	dist_x = (pad->x ) - ball->x - pad->width/2;
         flag_x = 1;
     }
-    // check x: ball hit top or bottom of block
+    // check x: ball hit top or bottom of paddle
     else if (ball->x >= pad->x - pad-> width/2 && ball->x <= pad->x  + pad->width/2) {
         dist_x = 0;
         flag_x = 2;
     }
 
-    // check x: ball hit right wall of block
+    // check x: ball hit right wall of paddle
     else if (ball->x > pad->x  + pad->width/2) {
     	dist_x = ball->x - (pad->x  + pad->width/2);
     	flag_x = 3;
     }
 
 
-     // check y: before block
+     // check y: above paddle
      if (ball->y <= pad->y - pad->height/2) {
     	 dist_y = (pad->y) - ball->y - pad->height/2;
          flag_y = 10;
      }
 
-     // check y: middle of block
+     // check y: middle of paddle
      else if (ball->y >= pad->y - pad->height/2&&
          ball->y <= pad->y + pad->height/2) {
          dist_y = 0;
          flag_y = 20;
      }
 
-     // check y: after block
+     // check y: below paddle
      else if (ball->y > pad->y + pad->height/2) {
     	 dist_y = ball->y - (pad->y + pad->height/2);
          flag_y = 30;
@@ -105,6 +105,7 @@ void check_collision_paddle(struct Ball *ball, struct Paddle *pad){
             draw_nums(ball->streak, 840, 20, 1);
             draw_nums(0, 840, 20, 0);
         }
+
         ball->streak = 0;
 
         // ball hit right side of paddle
@@ -319,7 +320,7 @@ int check_collision_block(struct Ball *ball, int block_layout[][2], struct Paddl
 }
 
 int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *padB, int flag) {
-	// ball hit right wall => B loses 3 points
+		// ball hit right wall => B loses 3 points
 		if (ball->x + ball->radius >= 1013) {
 			//reset streak
 			if (ball->current_player == 'A') {
@@ -343,7 +344,6 @@ int check_collision_edge(struct Ball *ball, struct Paddle *padA, struct Paddle *
 				return 0;
             }
 		}
-
 		// ball hit left wall => A loses 3 points
 		if (ball->x - ball->radius <= 11) {
 			if (ball->current_player == 'A') {

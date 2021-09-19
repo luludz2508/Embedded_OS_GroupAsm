@@ -4,6 +4,7 @@
 #include "../framebf.h"
 #include "block.h"
 #include "paddle_image.h"
+#include "background_image.h"
 
 void init_paddles(struct Paddle *p1, struct Paddle *p2) {
 	// Paddle 1
@@ -38,7 +39,7 @@ void draw_paddle(struct Paddle *self){
 
 	for(int y = -half_height; y <= half_height; y++)
 		for(int x = -half_width; x <= half_width; x++)
-				drawPixelARGB32((int)(x + self->x), (int)(y + self->y), 0x00);
+				drawPixelARGB32((int)(x + self->x), (int)(y + self->y),  background_img[(int)(y + self->y)*1024+(int)(x + self->x)]);
 
 	self->y+=(self->speed);
     draw_paddle_image(self);
@@ -49,7 +50,7 @@ void move_paddle(struct Paddle *self, char key){
         if (self->speed > 0){
             self->speed = -self->speed;
         }
-    } else if ((key== 's' ||key== 'k') && (self->y + self->height/2 + absolute(self->speed) < 768)){
+    } else if ((key== 's' ||key== 'k') && (self->y + self->height/2 + absolute(self->speed) <= 767)){
         if (self->speed < 0){
             self->speed = -self->speed;
         }

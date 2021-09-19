@@ -9,9 +9,10 @@
 #include "Game/ball.h"
 #include "Game/game.h"
 
-#define task 1
+#define task 2
 
 int main() {
+
     #if task == 1
         font();
     #elif task == 2
